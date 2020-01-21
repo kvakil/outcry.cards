@@ -43,4 +43,6 @@ defmodule OutcryWeb.Endpoint do
     signing_salt: "MfuUrOvk"
 
   plug OutcryWeb.Router
+
+  socket "/live", Phoenix.LiveView.Socket
 end

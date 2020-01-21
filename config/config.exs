@@ -15,7 +15,8 @@ config :outcry, OutcryWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Np58CrqiXNN/0Y/r/qk1fKjek75oKsxjKxqoU0hVD+wQ65a9G23fbgFYOXx2w6yg",
   render_errors: [view: OutcryWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Outcry.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Outcry.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "m9TwLHqcv5wZMefDgAhYSQxRAhAuZ8BSD6+D4CBDNda95yOysMzXZiuPQlhQ/d5u"]
 
 # Configures Elixir's Logger
 config :logger, :console,
