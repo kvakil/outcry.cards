@@ -23,15 +23,11 @@ defmodule Outcry.Game.Orders do
         defp cast(params) do
           schema_keys = Keyword.keys(unquote(schema))
 
-          changeset =
-            Ecto.Changeset.cast(
-              {struct(__MODULE__), Map.new(unquote(schema))},
-              Map.from_struct(params),
-              schema_keys
-            )
-
-          empty_map = Map.new(schema_keys, &{&1, nil})
-          update_in(changeset.changes, &Map.merge(empty_map, &1))
+          Ecto.Changeset.cast(
+            {struct(__MODULE__), Map.new(unquote(schema))},
+            Map.from_struct(params),
+            schema_keys
+          )
         end
       end
     end
