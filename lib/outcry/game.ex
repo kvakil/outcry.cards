@@ -18,11 +18,9 @@ defmodule Outcry.Game do
   end
 
   use GenServer, restart: :transient
-  alias Outcry.Game.Player
   alias Outcry.Game.Orders
-  alias Outcry.Game.Types
+  alias Outcry.Game.Types.{Suit, Direction}
 
-  @suits ~w(h j k l)a
   @nice_ids ~w(Q W E R)
 
   def start_link(args) do
@@ -43,7 +41,7 @@ defmodule Outcry.Game do
 
   defp clear_order_books(state) do
     empty_order_book = %{buy: [], sell: []}
-    state |> Map.put(:order_books, Map.new(@suits, &{&1, empty_order_book}))
+    state |> Map.put(:order_books, Map.new(Suit.all_suits(), &{&1, empty_order_book}))
   end
 
   @distribution [8, 10, 10, 12]
@@ -51,16 +49,16 @@ defmodule Outcry.Game do
 
   @impl true
   def handle_continue(%{event: "start_game", players: players}, state) do
-    card_distribution = Map.new(Enum.zip(@suits, Enum.shuffle(@distribution)))
+    card_distribution = Map.new(Enum.zip(Suit.all_suits(), Enum.shuffle(@distribution)))
 
     {common_suit, 12} = Enum.max_by(card_distribution, fn {_suit, count} -> count end)
-    goal_suit = Types.Suit.opposite_suit(common_suit)
+    goal_suit = Suit.opposite_suit(common_suit)
 
     deck =
       Enum.flat_map(card_distribution, fn {suit, count} -> List.duplicate(suit, count) end)
       |> Enum.shuffle()
 
-    initial_counts = Map.new(@suits, &{&1, 0})
+    initial_counts = Map.new(Suit.all_suits(), &{&1, 0})
 
     count_suits = fn raw_hand ->
       Enum.reduce(raw_hand, initial_counts, fn suit, counts ->
@@ -113,7 +111,7 @@ defmodule Outcry.Game do
   end
 
   defp try_order(state, player, %Orders.Limit{suit: suit, direction: direction, price: price}) do
-    other_direction = Types.Direction.opposite_direction(direction)
+    other_direction = Direction.opposite_direction(direction)
     other_side = state.order_books[suit][other_direction]
 
     case other_side do
@@ -121,7 +119,7 @@ defmodule Outcry.Game do
         :nocross
 
       [{other_player, other_price} | _rest_of_book] ->
-        other_direction_int = Types.Direction.direction_to_int(other_direction)
+        other_direction_int = Direction.direction_to_int(other_direction)
 
         if (other_price - price) * other_direction_int >= 0 do
           if player == other_player do
@@ -141,7 +139,7 @@ defmodule Outcry.Game do
     fake_order = %Orders.Limit{
       suit: suit,
       direction: direction,
-      price: 1_000 * Types.Direction.direction_to_int(direction)
+      price: 1_000 * Direction.direction_to_int(direction)
     }
 
     try_order(state, player, fake_order)
@@ -169,7 +167,7 @@ defmodule Outcry.Game do
          direction: direction,
          price: price
        }) do
-    direction_as_int = Types.Direction.direction_to_int(direction)
+    direction_as_int = Direction.direction_to_int(direction)
 
     update_in(state.order_books[suit][direction], fn order_book_half ->
       {not_worse_than_order, worse_than_order} =
@@ -189,14 +187,14 @@ defmodule Outcry.Game do
     update_wealth = fn state, {direction, player} ->
       update_in(
         state.players[player].wealth,
-        &(&1 - cross_price * Types.Direction.direction_to_int(direction))
+        &(&1 - cross_price * Direction.direction_to_int(direction))
       )
     end
 
     update_hand = fn state, {direction, player} ->
       update_in(
         state.players[player].hand[suit],
-        &(&1 + Types.Direction.direction_to_int(direction))
+        &(&1 + Direction.direction_to_int(direction))
       )
     end
 
