@@ -11,9 +11,9 @@ defmodule Outcry.Application do
       # Start the Ecto repository
       Outcry.Repo,
       # Start the endpoint when the application starts
-      OutcryWeb.Endpoint
-      # Starts a worker by calling: Outcry.Worker.start_link(arg)
-      # {Outcry.Worker, arg},
+      OutcryWeb.Endpoint,
+      # Start matchmaking presence watcher
+      OutcryWeb.MatchmakingPresence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
