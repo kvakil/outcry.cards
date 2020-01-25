@@ -8,12 +8,11 @@ defmodule Outcry.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Start the Ecto repository
       Outcry.Repo,
-      # Start the endpoint when the application starts
       OutcryWeb.Endpoint,
-      # Start matchmaking presence watcher
-      OutcryWeb.MatchmakingPresence
+      OutcryWeb.MatchmakingPresence,
+      Outcry.Matchmaker,
+      Outcry.GameSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
