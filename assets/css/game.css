@@ -1,0 +1,11 @@
+.order-book-order.animated {
+    animation-name: fade-out-color;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-duration: 0.5s;
+}
+
+@keyframes fade-out-color {
+    0% { background-color: #6AAB8E; }
+    100% { background-color: white; }
+}
