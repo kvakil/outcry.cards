@@ -62,7 +62,7 @@ defmodule Outcry.GameTest do
 
   test "game starts", %{game: game, players: players} do
     Enum.each(players, fn player ->
-      assert_receive {^player, %{event: "game_start", player_state: %{game_pid: ^game}}}
+      assert_receive {^player, %{event: "game_start", game_pid: ^game}}
     end)
   end
 

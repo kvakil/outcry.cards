@@ -1,7 +1,7 @@
 defmodule Outcry.Game do
   defmodule Player do
     def game_start(pid, game_pid) do
-      send(pid, %{event: "game_start", player_state: %{game_pid: game_pid}})
+      send(pid, %{event: "game_start", game_pid: game_pid})
     end
 
     def state_update(pid, state) do
