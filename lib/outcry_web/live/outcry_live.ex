@@ -6,7 +6,8 @@ defmodule OutcryWeb.OutcryLive do
   def mount(%{}, socket) do
     {:ok,
      socket
-     |> assign(user_id: inspect(self()), status: :in_queue)}
+     |> assign(user_id: inspect(self()), status: :in_queue),
+     temporary_assigns: [trade_message: nil]}
   end
 
   @impl true
@@ -31,6 +32,11 @@ defmodule OutcryWeb.OutcryLive do
   @impl true
   def handle_info(%{event: "state_update", state: state}, socket) do
     {:noreply, socket |> assign(state: state)}
+  end
+
+  @impl true
+  def handle_info(%{event: "trade"} = trade_message, socket) do
+    {:noreply, socket |> assign(trade_message: trade_message)}
   end
 
   @impl true
@@ -88,7 +94,7 @@ defmodule OutcryWeb.OutcryLive do
     end
     |> case do
       :ok ->
-        {:noreply, socket |> assign(errors: [])}
+        {:noreply, socket |> assign(errors: nil)}
 
       {:error, error_messages} ->
         {:noreply, socket |> assign(errors: error_messages)}
@@ -106,66 +112,166 @@ defmodule OutcryWeb.OutcryLive do
   def render(%{status: :in_game} = assigns) do
     ~L"""
       <%= if @state != %{} do %>
-        <%= for {_, player} <- @state.players do %>
-          <div class="player_statistics">
-          <div class="wealth"><%= player.wealth %> points</div>
+      <div class="tile is-ancestor">
+        <div class="tile is-parent is-vertical">
+          <div class="tile is-parent">
+            <div class="tile is-parent is-vertical is-3">
+              <div class="tile is-child box">
+                <table class="table is-bordered is-fullwidth">
+                  <thead>
+                  <th>Player</th>
+                  <th>Points</th>
+                  </thead>
+                  <tbody>
+                    <%= for {pid, player} <- @state.players do %>
+                    <tr>
+                      <td class="player" style="height: 44px;"><%= player.nice_id %>
+                      <%= if self() == pid do %>
+                        <abbr title="You are player <%= player.nice_id %>.">(*)</abbr>
+                      <% end %>
+                      </td>
+                      <td class="wealth" style="height: 44px;"><%= player.wealth %></td>
+                    </tr>
+                    <% end %>
+                </table>
+              </div>
+            </div>
+            <div class="tile is-parent is-6" id="order_book">
+              <div class="tile is-child box">
+                <table class="table is-bordered is-fullwidth">
+                  <thead>
+                  <th style="text-align: right;">Buy</th>
+                  <th>Suit</th>
+                  <th>Sell</th>
+                  </thead>
+                  <tbody>
+                  <% hand = @state.players[self()].hand %>
+                  <%= for {suit, order_book} <- @state.order_books do %>
+                  <tr id="order-book-<%= suit %>">
+                    <%= for side <- [:buy, :sell] do %>
+                    <td style="min-width: 10em; height: 44px;" class="order-book-<%= side %>">
+                      <% order_book_side = if(side == :buy, do: Enum.reverse(order_book.buy),
+                                                            else: order_book.sell) %>
+                      <%= for {player, price} <- order_book_side do %>
+                        <% nice_id = @state.players[player].nice_id %>
+                        <% e_id = Enum.join(["order-book-order", nice_id, suit, side, price], "-") %>
+                        <span class="order-book-order" id="<%= e_id %>" phx-hook="Order">
+                        <%= price %><sup><%= nice_id %></sup>
+                        </span>
+                      <% end %>
+                      <%= if side == :buy do %>
+                        <td class="has-text-centered">
+                        <%= suit %>
+                        <abbr title="You have <%= hand[suit] %> cards of suit <%= suit %>.">
+                        (<%= hand[suit] %>)
+                        </abbr>
+                        </td>
+                      <% end %>
+                    </td>
+                    <% end %>
+                    </td>
+                  </tr>
+                  <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div id="trade_history_container" class="tile is-parent is-3">
+              <div class="tile is-child box">
+                <p class="label">Trade History</p>
+                <div id="trade_history" phx-update="append" style="height: 11rem; overflow-y: scroll;">
+                <%= if @trade_message do %>
+                  <% %{trade_id: trade_id, trade: {parties, cross}, order: %{suit: suit}} = @trade_message %>
+                  <% buyer_nice = @state.players[parties.buy].nice_id %>
+                  <% seller_nice = @state.players[parties.sell].nice_id %>
+                  <p id="order_history_trade_<%= trade_id %>" style="font-family: monospace;" phx-hook="History">
+                    <%= buyer_nice %>+<%= suit %> &amp; <%= seller_nice %>+<%= cross %>
+                  </p>
+                <% end %>
+                </div>
+              </div>
+            </div>
           </div>
-        <% end %>
-        <div class="my_hand"><%= inspect @state.players[self()].hand, pretty: true %></div>
-        <div class="order_book">
-          <table>
-            <thead>
-            <th>Buy</th>
-            <th>Suit</th>
-            <th>Sell</th>
-            </thead>
-            <tbody>
-            <%= for {suit, order_book} <- @state.order_books do %>
-            <tr id="order-book-<%= suit %>">
-              <%= for side <- [:buy, :sell] do %>
-              <td>
-                <% order_book_side = if(side == :buy, do: Enum.reverse(order_book.buy),
-                                                      else: order_book.sell) %>
-                <%= for {player, price} <- order_book_side do %>
-                  <% nice_id = @state.players[player].nice_id %>
-                  <% e_id = Enum.join(["order-book-order", nice_id, suit, side, price], "-") %>
-                  <span class="order-book-order" id="<%= e_id %>" phx-hook="Order">
-                  <%= price %><sup><%= nice_id %></sup>
-                  </span>
-                <% end %>
-                <%= if side == :buy do %>
-                <td><%= suit %></td>
-                <% end %>
-              </td>
-              <% end %>
-              </td>
-            </tr>
-            <% end %>
-            </tbody>
-          </table>
+          <div class="tile is-parent">
+            <div class="tile is-child is-3"></div>
+            <div class="tile is-child is-6">
+              <%= f = form_for :order, "#", [phx_submit: :order, id: "order"] %>
+              <div class="field is-horizontal">
+                <div class="field-label">
+                  <%= label f, :direction, "Direction", [class: "label"] %>
+                </div>
+                <div class="field-body is-narrow">
+                  <div class="field">
+                    <label class="radio">
+                      <%= radio_button f, :direction, "buy", [required: true] %>
+                      buy (<kbd>a</kbd>)
+                    </label>
+                    <label class="radio">
+                      <%= radio_button f, :direction, "sell", [required: true] %>
+                      sell (<kbd>s</kbd>)
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <%= label f, :suit, "Suit", [class: "label"] %>
+                </div>
+                <div class="field-body is-narrow">
+                  <div class="select">
+                    <%= select f, :suit, ["", "h", "j", "k", "l"], [required: true] %>
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <%= label f, :price, "Price", [class: "label"] %>
+                </div>
+                <div class="field-body">
+                  <%= number_input f, :price, [min: 0, max: 200, class: "input", required: "", placeholder: "(use number keys)"] %>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label">
+                  <label class="label">Type</label>
+                </div>
+                <div class="field-body is-narrow">
+                  <div class="field">
+                    <label class="radio">
+                      <%= radio_button f, :type, :limit, [checked: ""] %>
+                      Limit (<kbd>z</kbd>)
+                    </label>
+                    <label class="radio">
+                      <%= radio_button f, :type, :market %>
+                      Market (<kbd>x</kbd>)
+                    </label>
+                    <label class="radio">
+                      <%= radio_button f, :type, :cancel %>
+                      Cancel (<kbd>c</kbd>)
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal"></div>
+                <div class="field-body">
+                  <div class="control">
+                    <%= submit "Submit (Enter)", [id: "order_submit", class: "button is-link"] %>
+                  </div>
+                  <%= if Map.get(assigns, :errors) do %>
+                  <p class="help is-danger">
+                    <%= inspect @errors %>
+                  </p>
+                  <% end %>
+                </div>
+              </div>
+              </form>
+            </div>
+            <div class="tile is-child is-3"></div>
+          </div>
         </div>
+      </div>
       <% end %>
-      <%= f = form_for :order, "#", [phx_submit: :order, id: "order"] %>
-      <%= label f, :direction, "Direction" %>
-      <%= radio_button f, :direction, "buy", [required: true] %>  <%= label f, :direction_buy, "buy (a)" %>
-      <%= radio_button f, :direction, "sell", [required: true] %> <%= label f, :direction_sell, "sell (s)" %>
-      <br>
-      <%= label f, :suit, "Suit" %>
-      <%= select f, :suit, ["", "h", "j", "k", "l"], [required: true] %>
-      <br>
-      <%= label f, :price, "Price" %>
-      <%= number_input f, :price, [min: 0, max: 200] %>
-      <br>
-      <%= radio_button f, :type, :limit, [checked: true] %>
-      <%= label f, :type_limit, "Limit order (z)" %>
-      <%= radio_button f, :type, :market %>
-      <%= label f, :type_market, "Market order (x)" %>
-      <%= radio_button f, :type, :cancel %>
-      <%= label f, :type_cancel, "Cancel (c)" %>
-      <br>
-      <%= submit "Submit", [phx_disable_with: "Sending...", id: "order_submit"] %>
-      <%= inspect Map.get(assigns, :errors) %>
-      </form>
     """
   end
 

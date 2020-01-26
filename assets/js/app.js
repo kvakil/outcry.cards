@@ -18,11 +18,19 @@ import "phoenix_html";
 import {Socket} from "phoenix";
 
 const Hooks = {};
+
 Hooks.Order = {
     mounted() {
         this.el.classList.add("animated");
         // Stop this from being animated again by morphdom.
         this.el.addEventListener("animationend", _e => this.el.classList.remove("animated"));
+    }
+};
+
+Hooks.History = {
+    mounted() {
+        const history = document.getElementById("trade_history");
+        history.scrollTop = history.scrollHeight;
     }
 };
 
@@ -82,13 +90,13 @@ const actionMap = {
     "Enter": _e => submitOrder()
 }
 
-function isTyping() {
+function isTypingPrice() {
     const el = document.activeElement;
-    return el && (typeof el.selectionStart !== "undefined" || el.isContentEditable);
+    return el.id == "order_price";
 }
 
 document.addEventListener("keydown", e => {
-    if (isTyping()) {
+    if (isTypingPrice()) {
         return false;
     }
     if (e.ctrlKey || e.altKey) {

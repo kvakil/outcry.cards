@@ -8,6 +8,10 @@ defmodule Outcry.Game do
       send(pid, %{event: "state_update", state: state})
     end
 
+    def trade(pid, trade_message) do
+      send(pid, Map.put(trade_message, :event, "trade"))
+    end
+
     def game_over(pid, score_info) do
       send(pid, %{event: "game_over", score_info: score_info})
     end
@@ -27,7 +31,7 @@ defmodule Outcry.Game do
     GenServer.start_link(__MODULE__, args)
   end
 
-  @game_length 120_000
+  @game_length 120_000_00
 
   @impl true
   def init(args) do
@@ -89,6 +93,7 @@ defmodule Outcry.Game do
      state
      |> Map.put(:players, players)
      |> Map.put(:goal_suit, goal_suit)
+     |> Map.put(:trade_id, 0)
      |> clear_order_books(), {:continue, :broadcast_start}}
   end
 
@@ -104,6 +109,16 @@ defmodule Outcry.Game do
   def handle_continue(:broadcast_state, state) do
     broadcast_to_players(&Player.state_update(&1, state), state)
     {:noreply, state}
+  end
+
+  @impl true
+  def handle_continue({:broadcast_trade, trade_message}, state) do
+    broadcast_to_players(&Player.trade(&1, trade_message), state)
+    {:noreply, state, @and_then_broadcast_state}
+  end
+
+  defp increment_trade_id(state) do
+    update_in(state.trade_id, &(&1 + 1))
   end
 
   defp cancel_conflicting_orders(order_book_side, player) do
@@ -202,7 +217,7 @@ defmodule Outcry.Game do
       state |> update_wealth.(order_side) |> update_hand.(order_side)
     end
 
-    _new_state = Enum.reduce(sides, state, execute) |> clear_order_books()
+    _new_state = Enum.reduce(sides, state, execute) |> increment_trade_id() |> clear_order_books()
   end
 
   defp has_card?(state, player, suit) do
@@ -243,7 +258,10 @@ defmodule Outcry.Game do
 
         {:cross, trade} ->
           new_state = execute_trade(state, order, trade)
-          {:noreply, new_state, @and_then_broadcast_state}
+
+          {:noreply, new_state,
+           {:continue,
+            {:broadcast_trade, %{trade_id: state.trade_id, trade: trade, order: order}}}}
 
         :selftrade ->
           {:noreply, state}
