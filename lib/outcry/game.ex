@@ -31,7 +31,7 @@ defmodule Outcry.Game do
     GenServer.start_link(__MODULE__, args)
   end
 
-  @game_length 120_000
+  @game_length 6_000
 
   @impl true
   def init(args) do
@@ -297,7 +297,13 @@ defmodule Outcry.Game do
       |> Map.merge(goal_points, sum_points)
       |> Map.merge(winners_points, sum_points)
 
-    %{final_scores: final_scores, goal_suit: goal_suit}
+    %{
+      final_scores: final_scores,
+      goal_suit: goal_suit,
+      wealth_points: wealth_points,
+      goal_points: goal_points,
+      winners_points: winners_points
+    }
   end
 
   defp end_game(state) do

@@ -1,0 +1,57 @@
+<div class="tile is-child is-3"></div>
+<div class="tile is-child is-6 box" id="final-score" phx-hook="EndGame">
+
+<h2 class="title is-2">The goal suit was... <span class="order-book-suit"><%= @score_info.goal_suit %></span>!</h2>
+<table class="table is-bordered is-fullwidth">
+  <tr>
+    <th class="final-score-header" scope="col">Hands</th>
+    <%= for {pid, player} <- @players do %>
+    <th class="player final-score-header" scope="col"><%= player.nice_id %>
+      <%= if self() == pid do %>
+        <abbr title="You were player <%= player.nice_id %>.">(*)</abbr>
+      <% end %></th>
+    <% end %>
+  </tr>
+  <%= for suit <- ~w(h j k l)a do %>
+  <% maybe_goal_suit = case @score_info.goal_suit do
+       ^suit -> "is-selected"
+       _ -> ""
+     end %>
+  <tr class="<%= maybe_goal_suit %>">
+    <th class="order-book-suit" scope="row"><%= suit %></td>
+    <%= for {pid, player} <- @players do %>
+    <td><%= player.hand[suit] %></td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+
+<table class="table is-bordered is-fullwidth">
+  <tr>
+    <th class="final-score-header" scope="col">Player</th>
+    <th class="final-score-header" scope="col">Trade</th>
+    <th class="final-score-header" scope="col">Goal</th>
+    <th class="final-score-header" scope="col">Bonus</th>
+    <th class="final-score-header" scope="col">Final</th>
+  </tr>
+  <% highest_score = Enum.max(Map.values(@score_info.final_scores)) %>
+  <% winners = @score_info.final_scores
+     |> Enum.filter(fn {_, p} -> p == highest_score end)
+     |> Enum.map(fn {pid, ^highest_score} -> pid end) %>
+  <%= for {pid, player} <- @players do %>
+  <% maybe_winner = if(pid in winners, do: "is-selected", else: "") %>
+  <tr class="<%= maybe_winner %>">
+  <th class="player" scope="row"><%= player.nice_id %>
+      <%= if self() == pid do %>
+        <abbr title="You were player <%= player.nice_id %>.">(*)</abbr>
+      <% end %></th>
+  <td><%= round(@score_info.wealth_points[pid]) %></td>
+  <td><%= round(Map.get(@score_info.goal_points, pid, 0)) %></td>
+  <td><%= round(Map.get(@score_info.winners_points, pid, 0)) %></td>
+  <td><%= round(@score_info.final_scores[pid]) %></td>
+  </tr>
+  <% end %>
+</table>
+<button class="button is-link" id="requeue" phx-click="requeue">Play again! (y)</button>
+</div>
+<div class="tile is-child is-3"></div>

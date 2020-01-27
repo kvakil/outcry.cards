@@ -10,11 +10,19 @@ defmodule OutcryWeb.OutcryLive do
      temporary_assigns: [trade_message: nil]}
   end
 
-  @impl true
-  def handle_params(%{}, _params, socket) do
+  defp join_matchmaking(socket) do
     channel = Outcry.Matchmaker.channel()
     {:ok, _} = MatchmakingPresence.track(self(), channel, socket.assigns.user_id, %{pid: self()})
+  end
 
+  defp leave_matchmaking(socket) do
+    channel = Outcry.Matchmaker.channel()
+    :ok = MatchmakingPresence.untrack(self(), channel, socket.assigns.user_id)
+  end
+
+  @impl true
+  def handle_params(%{}, _params, socket) do
+    join_matchmaking(socket)
     {:noreply, socket}
   end
 
@@ -23,9 +31,7 @@ defmodule OutcryWeb.OutcryLive do
         %{event: "game_start", game_pid: game_pid},
         %{assigns: %{status: :in_queue}} = socket
       ) do
-    channel = Outcry.Matchmaker.channel()
-    :ok = MatchmakingPresence.untrack(self(), channel, socket.assigns.user_id)
-
+    leave_matchmaking(socket)
     {:noreply, socket |> assign(status: :game_starting, game_pid: game_pid)}
   end
 
@@ -33,6 +39,7 @@ defmodule OutcryWeb.OutcryLive do
   def handle_info(%{event: "state_update", state: state}, socket) do
     # LiveView change tracking only tracks assigns directly,
     # so we flatten our state a little here.
+    # TODO: flatten more?
     order_books = reverse_order_book_buys(state.order_books)
     {:noreply,
      socket |> assign(players: state.players, order_books: order_books, status: :game_started)}
@@ -112,10 +119,16 @@ defmodule OutcryWeb.OutcryLive do
   end
 
   @impl true
+  def handle_event("requeue", _params, socket) do
+    join_matchmaking(socket)
+    {:noreply, socket |> assign(status: :in_queue)}
+  end
+
+  @impl true
   def render(assigns) do
     ~L"""
     <%= case @status do %>
-      <% :in_queue -> %> <h1>Looking for game...</h1>
+      <% :in_queue -> %> <h1 class="title is-1">Looking for game...</h1>
       <% :game_started -> %>
       <div class="tile is-ancestor">
         <div class="tile is-parent is-vertical">
@@ -129,9 +142,11 @@ defmodule OutcryWeb.OutcryLive do
       </div>
       <% :game_starting -> %>
       <% :game_over -> %>
-      <h1>Game finished!</h1>
-
-      <pre><%= inspect @score_info, pretty: true %></pre>
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <%= Phoenix.View.render(OutcryWeb.GameView, "final_score.html", assigns) %>
+        </div>
+      </div>
     <% end %>
     """
   end

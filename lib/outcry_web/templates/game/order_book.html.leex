@@ -2,7 +2,7 @@
   <table class="table is-bordered is-fullwidth">
     <thead>
     <th align="" class="order-book-buy">Buy</th>
-    <th align="" class="order-book-suit">Suit</th>
+    <th align="">Suit</th>
     <th align="" class="order-book-sell">Sell</th>
     </thead>
     <tbody>
@@ -21,7 +21,9 @@
         <%= if side == :buy do %>
           <td class="has-text-centered order-book-suit">
           <%= suit %>
-          <abbr title="You have <%= hand[suit] %> cards of suit <%= suit %>.">
+          <abbr id="hand_<%= suit %>" class="hand"
+                title="You have <%= hand[suit] %> cards of suit <%= suit %>."
+                phx-hook="Hand">
           (<%= hand[suit] %>)</abbr></td>
         <% end %>
       </td>

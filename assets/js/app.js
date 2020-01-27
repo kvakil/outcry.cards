@@ -19,11 +19,15 @@ import {Socket} from "phoenix";
 
 const Hooks = {};
 
+// Animates an element once, even if morphdom tries to recreate it.
+function animateOnce(element, animationClass) {
+    element.classList.add(animationClass);
+    element.addEventListener("animationend", _e => element.classList.remove(animationClass));
+}
+
 Hooks.Order = {
     mounted() {
-        this.el.classList.add("animated");
-        // Stop this from being animated again by morphdom.
-        this.el.addEventListener("animationend", _e => this.el.classList.remove("animated"));
+        animateOnce(this.el, "animated");
     }
 };
 
@@ -46,8 +50,30 @@ Hooks.Points = {
         }
 
         const animationClass = ((previous > current) ? "buy" : "sell") + "-animated";
-        this.el.classList.add(animationClass);
-        this.el.addEventListener("animationend", _e => this.el.classList.remove(animationClass));
+        animateOnce(this.el, animationClass);
+    }
+};
+
+Hooks.Hand = {
+    previousHand: {},
+
+    updated() {
+        const previous = this.previousHand[this.el.id];
+        const current = +this.el.innerText.slice(1, -1);
+        this.previousHand[this.el.id] = current;
+        if (previous === undefined || current == previous) {
+            return;
+        }
+
+        const animationClass = ((previous > current) ? "sell" : "buy") + "-animated";
+        animateOnce(this.el, animationClass);
+    }
+};
+
+Hooks.EndGame = {
+    mounted() {
+        Hooks.Points.previousPoints = {};
+        Hooks.Hand.previousHand = {};
     }
 };
 
@@ -91,7 +117,13 @@ function backspacePrice() {
 
 function submitOrder() {
     document.getElementById("order_submit").click();
-    document.getElementById("order_price").value = "";
+    if (document.getElementById("order").checkValidity()) {
+        document.getElementById("order_price").value = "";
+    }
+}
+
+function requeue() {
+    document.getElementById("requeue").click();
 }
 
 const actionMap = {
@@ -104,6 +136,7 @@ const actionMap = {
     "KeyZ": _e => selectOrderType("order_type_limit"),
     "KeyX": _e => selectOrderType("order_type_market"),
     "KeyC": _e => selectOrderType("order_type_cancel"),
+    "KeyY": _e => requeue(),
     "Backspace": _e => backspacePrice(),
     "Enter": _e => submitOrder()
 }

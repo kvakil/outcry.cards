@@ -6,8 +6,7 @@
     <% buyer_nice = @players[parties.buy].nice_id %>
     <% seller_nice = @players[parties.sell].nice_id %>
     <p id="trade_history_<%= trade_id %>" class="trade-history-item" phx-hook="History">
-    <span class="buy"><%= buyer_nice %></span>+<%= suit %> &amp;
-    <span class="sell"><%= seller_nice %></span>+<%= cross %>
+    <%= buyer_nice %>+<%= suit %> &amp; <%= seller_nice %>+<%= cross %>
     </p>
   <% end %>
   </div>

@@ -75,4 +75,9 @@ defmodule Outcry.Game.TypesTest do
     assert {:error, message: "is not a number."} = cast("foo")
     assert {:error, message: "is not a number."} = cast("")
   end
+
+  test "floating points rounded off" do
+    import Price
+    assert {:ok, 3} = cast("3.3")
+  end
 end
