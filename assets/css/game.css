@@ -64,3 +64,12 @@ td.order-book-suit {
 .order-book-sell {
     text-align: left;
 }
+
+#trade_history {
+    height: 11rem;
+    overflow-y: scroll;
+}
+
+.trade-history-item {
+    font-family: monospace;
+}

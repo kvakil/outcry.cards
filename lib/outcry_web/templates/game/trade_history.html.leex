@@ -1,11 +1,11 @@
 <div id="trade_history_container" class="tile is-3 is-child box">
   <p class="label">Trade History</p>
-  <div id="trade_history" phx-update="append" style="height: 11rem; overflow-y: scroll;">
+  <div id="trade_history" phx-update="append">
   <%= if @trade_message do %>
     <% %{trade_id: trade_id, trade: {parties, cross}, order: %{suit: suit}} = @trade_message %>
     <% buyer_nice = @players[parties.buy].nice_id %>
     <% seller_nice = @players[parties.sell].nice_id %>
-    <p id="order_history_trade_<%= trade_id %>" style="font-family: monospace;" phx-hook="History">
+    <p id="trade_history_<%= trade_id %>" class="trade-history-item" phx-hook="History">
     <span class="buy"><%= buyer_nice %></span>+<%= suit %> &amp;
     <span class="sell"><%= seller_nice %></span>+<%= cross %>
     </p>
