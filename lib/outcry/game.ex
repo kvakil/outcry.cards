@@ -49,7 +49,7 @@ defmodule Outcry.Game do
   end
 
   @distribution [8, 10, 10, 12]
-  @initial_wealth -50
+  @initial_wealth 0
 
   @impl true
   def handle_continue(%{event: "start_game", players: players}, state) do

@@ -84,8 +84,8 @@ defmodule Outcry.GameTest do
     assert_player_state(player_j, %{hand: %{h: 0}})
     assert :ok = Player.place_order(player_h, game, sell_order)
     assert :ok = Player.place_order(player_j, game, %{sell_order | direction: :buy})
-    assert_player_state(player_h, %{hand: %{h: 7}, wealth: -45})
-    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -55})
+    assert_player_state(player_h, %{hand: %{h: 7}, wealth: 5})
+    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -5})
   end
 
   test "trade uses standing order price", %{game: game, players: players} do
@@ -97,8 +97,8 @@ defmodule Outcry.GameTest do
     assert_player_state(player_j, %{hand: %{h: 0}})
     assert :ok = Player.place_order(player_h, game, sell_order)
     assert :ok = Player.place_order(player_j, game, buy_order)
-    assert_player_state(player_h, %{hand: %{h: 7}, wealth: -45})
-    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -55})
+    assert_player_state(player_h, %{hand: %{h: 7}, wealth: 5})
+    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -5})
   end
 
   test "trade uses best price", %{game: game, players: players} do
@@ -111,9 +111,9 @@ defmodule Outcry.GameTest do
     assert :ok = Player.place_order(player_h, game, sell_order)
     assert :ok = Player.place_order(player_k, game, %{sell_order | price: 4})
     assert :ok = Player.place_order(player_j, game, %{sell_order | direction: :buy})
-    assert_player_state(player_h, %{hand: %{k: 2}, wealth: -50})
-    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -54})
-    assert_player_state(player_k, %{hand: %{k: 9}, wealth: -46})
+    assert_player_state(player_h, %{hand: %{k: 2}, wealth: 0})
+    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -4})
+    assert_player_state(player_k, %{hand: %{k: 9}, wealth: 4})
   end
 
   test "trade uses first time when price conflicts", %{game: game, players: players} do
@@ -126,9 +126,9 @@ defmodule Outcry.GameTest do
     assert :ok = Player.place_order(player_h, game, sell_order)
     assert :ok = Player.place_order(player_k, game, sell_order)
     assert :ok = Player.place_order(player_j, game, %{sell_order | direction: :buy})
-    assert_player_state(player_h, %{hand: %{k: 1}, wealth: -45})
-    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -55})
-    assert_player_state(player_k, %{hand: %{k: 10}, wealth: -50})
+    assert_player_state(player_h, %{hand: %{k: 1}, wealth: 5})
+    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -5})
+    assert_player_state(player_k, %{hand: %{k: 10}, wealth: 0})
   end
 
   test "market order works", %{game: game, players: players} do
@@ -140,8 +140,8 @@ defmodule Outcry.GameTest do
     assert_player_state(player_j, %{hand: %{k: 0}})
     assert :ok = Player.place_order(player_j, game, buy_order)
     assert :ok = Player.place_order(player_h, game, market_order)
-    assert_player_state(player_h, %{hand: %{k: 1}, wealth: 150})
-    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -250})
+    assert_player_state(player_h, %{hand: %{k: 1}, wealth: 200})
+    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -200})
   end
 
   test "market order selects best price", %{game: game, players: players} do
@@ -156,9 +156,9 @@ defmodule Outcry.GameTest do
     # next order is better and should get filled
     assert :ok = Player.place_order(player_k, game, %{sell_order | price: 4})
     assert :ok = Player.place_order(player_j, game, market_order)
-    assert_player_state(player_h, %{hand: %{k: 2}, wealth: -50})
-    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -54})
-    assert_player_state(player_k, %{hand: %{k: 9}, wealth: -46})
+    assert_player_state(player_h, %{hand: %{k: 2}, wealth: 0})
+    assert_player_state(player_j, %{hand: %{k: 1}, wealth: -4})
+    assert_player_state(player_k, %{hand: %{k: 9}, wealth: 4})
   end
 
   test "failed market order not on books", %{game: game, players: players} do
@@ -172,8 +172,8 @@ defmodule Outcry.GameTest do
     assert :ok = Player.place_order(player_h, game, market_order)
     # next order does not hit market order above
     assert :ok = Player.place_order(player_j, game, buy_order)
-    assert_player_state(player_h, %{hand: %{k: 2}, wealth: -50})
-    assert_player_state(player_j, %{hand: %{k: 0}, wealth: -50})
+    assert_player_state(player_h, %{hand: %{k: 2}, wealth: 0})
+    assert_player_state(player_j, %{hand: %{k: 0}, wealth: 0})
   end
 
   test "cancel order explicitly", %{game: game, players: players} do
@@ -219,12 +219,12 @@ defmodule Outcry.GameTest do
     # next order will be cleared by trade in h suit
     assert :ok = Player.place_order(player_h, game, sell_order_k)
     assert :ok = Player.place_order(player_j, game, %{sell_order_h | direction: :buy})
-    assert_player_state(player_h, %{hand: %{h: 7}, wealth: -45})
-    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -55})
+    assert_player_state(player_h, %{hand: %{h: 7}, wealth: 5})
+    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -5})
     assert :ok = Player.place_order(player_j, game, %{sell_order_k | direction: :buy})
     # trade in k suit does not happen
-    assert_player_state(player_h, %{hand: %{k: 2}, wealth: -45})
-    assert_player_state(player_j, %{hand: %{k: 0}, wealth: -55})
+    assert_player_state(player_h, %{hand: %{k: 2}, wealth: 5})
+    assert_player_state(player_j, %{hand: %{k: 0}, wealth: -5})
   end
 
   test "short sell denied", %{game: game, players: players} do
@@ -236,7 +236,7 @@ defmodule Outcry.GameTest do
     assert :ok = Player.place_order(player_h, game, sell_order)
     # next order does not hit denied order above
     assert :ok = Player.place_order(player_j, game, %{sell_order | direction: :buy})
-    assert_player_state(player_h, %{hand: %{j: 0}, wealth: -50})
+    assert_player_state(player_h, %{hand: %{j: 0}, wealth: 0})
   end
 
   test "blantantly invalid orders denied", %{game: game, players: players} do
@@ -257,7 +257,7 @@ defmodule Outcry.GameTest do
 
     final_scores =
       Map.new(players, fn player ->
-        {player, if(player == player_j, do: 150.0, else: -50)}
+        {player, if(player == player_j, do: 200.0, else: 0)}
       end)
 
     send(game, :end_game)
@@ -272,7 +272,7 @@ defmodule Outcry.GameTest do
   end
 
   test "end game includes wealth", %{game: game, players: players} do
-    final_scores = Map.new(Enum.zip(players, [-45, 145.0, -50, -50]))
+    final_scores = Map.new(Enum.zip(players, [5, 195.0, 0, 0]))
 
     [player_h, player_j | _] = players
     sell_order = %Limit{suit: :h, direction: :sell, price: 5}
@@ -281,8 +281,8 @@ defmodule Outcry.GameTest do
     assert_player_state(player_j, %{hand: %{h: 0}})
     assert :ok = Player.place_order(player_h, game, sell_order)
     assert :ok = Player.place_order(player_j, game, %{sell_order | direction: :buy})
-    assert_player_state(player_h, %{hand: %{h: 7}, wealth: -45})
-    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -55})
+    assert_player_state(player_h, %{hand: %{h: 7}, wealth: 5})
+    assert_player_state(player_j, %{hand: %{h: 1}, wealth: -5})
 
     send(game, :end_game)
 
@@ -296,7 +296,7 @@ defmodule Outcry.GameTest do
   end
 
   test "end game users tie", %{game: game, players: players} do
-    final_scores = Map.new(Enum.zip(players, [45.0, 55.0, -50, -50]))
+    final_scores = Map.new(Enum.zip(players, [95.0, 105.0, 0, 0]))
 
     [player_h, player_j | _] = players
     buy_order = %Limit{suit: :j, direction: :buy, price: 1}
@@ -349,7 +349,7 @@ defmodule Outcry.GameTest do
                         score_info: %{final_scores: final_scores, goal_suit: :j}
                       }}
 
-      assert Enum.sum(Map.values(final_scores)) == 0
+      assert Enum.sum(Map.values(final_scores)) == 200
     end)
   end
 end
