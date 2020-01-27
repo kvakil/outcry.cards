@@ -1,0 +1,34 @@
+<div class="tile is-child is-6 box" id="order_book">
+  <table class="table is-bordered is-fullwidth">
+    <thead>
+    <th align="" class="order-book-buy">Buy</th>
+    <th align="" class="order-book-suit">Suit</th>
+    <th align="" class="order-book-sell">Sell</th>
+    </thead>
+    <tbody>
+    <% hand = @players[self()].hand %>
+    <%= for {suit, order_book} <- @order_books do %>
+    <tr id="order-book-<%= suit %>">
+      <%= for side <- [:buy, :sell] do %>
+      <td class="order-book-side order-book-<%= side %>" align="">
+        <%= for {player, price} <- order_book[side] do %>
+          <% nice_id = @players[player].nice_id %>
+          <% e_id = Enum.join(["order-book-order", nice_id, suit, side, price], "-") %>
+          <span class="order-book-order" id="<%= e_id %>" phx-hook="Order">
+          <%= price %><sup><%= nice_id %></sup>
+          </span>
+        <% end %>
+        <%= if side == :buy do %>
+          <td class="has-text-centered order-book-suit">
+          <%= suit %>
+          <abbr title="You have <%= hand[suit] %> cards of suit <%= suit %>.">
+          (<%= hand[suit] %>)</abbr></td>
+        <% end %>
+      </td>
+      <% end %>
+      </td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

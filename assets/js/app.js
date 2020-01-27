@@ -34,6 +34,23 @@ Hooks.History = {
     }
 };
 
+Hooks.Points = {
+    previousPoints: {},
+
+    updated() {
+        const previous = this.previousPoints[this.el.id];
+        const current = +this.el.innerText;
+        this.previousPoints[this.el.id] = current;
+        if (previous === undefined || current == previous) {
+            return;
+        }
+
+        const animationClass = ((previous > current) ? "buy" : "sell") + "-animated";
+        this.el.classList.add(animationClass);
+        this.el.addEventListener("animationend", _e => this.el.classList.remove(animationClass));
+    }
+};
+
 let socket = new Socket("/socket", {});
 
 // LiveView
@@ -74,6 +91,7 @@ function backspacePrice() {
 
 function submitOrder() {
     document.getElementById("order_submit").click();
+    document.getElementById("order_price").value = "";
 }
 
 const actionMap = {
@@ -92,7 +110,7 @@ const actionMap = {
 
 function isTypingPrice() {
     const el = document.activeElement;
-    return el.id == "order_price";
+    return el && el.id == "order_price";
 }
 
 document.addEventListener("keydown", e => {

@@ -1,11 +1,66 @@
 .order-book-order.animated {
-    animation-name: fade-out-color;
+    animation-name: fade-cyan;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 0.5s;
+    animation-duration: 0.4s;
 }
 
-@keyframes fade-out-color {
-    0% { background-color: #6AAB8E; }
+@keyframes fade-cyan {
+    0% { background-color: hsl(204, 71%, 53%) ; }
     100% { background-color: white; }
+}
+
+@keyframes fade-green {
+    0% { background-color: hsl(141, 53%, 53%); }
+    100% { background-color: white; }
+}
+
+@keyframes fade-red {
+    0% { background-color: hsl(348, 86%, 61%); }
+    100% { background-color: white; }
+}
+
+.player {
+    height: 44px;
+    font-family: monospace;
+}
+
+.points {
+    height: 44px;
+    font-family: monospace;
+}
+
+.points.buy-animated {
+    animation-name: fade-red;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-duration: 0.4s;
+}
+
+.points.sell-animated {
+    animation-name: fade-green;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-duration: 0.4s;
+}
+
+td.order-book-side {
+    font-family: monospace;
+}
+
+.order-book-side {
+    min-width: 10em;
+    height: 44px;
+}
+
+td.order-book-suit {
+    font-family: monospace;
+}
+
+.order-book-buy {
+    text-align: right;
+}
+
+.order-book-sell {
+    text-align: left;
 }

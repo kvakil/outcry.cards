@@ -31,7 +31,7 @@ defmodule Outcry.Game do
     GenServer.start_link(__MODULE__, args)
   end
 
-  @game_length 120_000_00
+  @game_length 120_000
 
   @impl true
   def init(args) do

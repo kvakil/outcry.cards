@@ -1,0 +1,19 @@
+<div class="tile is-child is-3 box">
+<table class="table is-bordered is-fullwidth">
+  <thead>
+  <th>Player</th>
+  <th>Points</th>
+  </thead>
+  <tbody>
+    <%= for {pid, player} <- @players do %>
+    <tr>
+      <td class="player"><%= player.nice_id %>
+      <%= if self() == pid do %>
+        <abbr title="You are player <%= player.nice_id %>.">(*)</abbr>
+      <% end %>
+      </td>
+      <td id="points-<%= player.nice_id %>" phx-hook="Points" class="points"><%= player.wealth %></td>
+    </tr>
+    <% end %>
+</table>
+</div>
