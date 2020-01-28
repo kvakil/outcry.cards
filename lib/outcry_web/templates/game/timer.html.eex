@@ -1,0 +1,4 @@
+<div id="timer_container" class="tile is-child is-3">
+  <label class="label" for="timer">Time Remaining</label>
+  <progress id="timer" class="progress" phx-hook="Timer" value="1">120 seconds left</progress>
+</div>

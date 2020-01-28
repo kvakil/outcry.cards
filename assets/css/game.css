@@ -91,3 +91,13 @@ td.order-book-side {
 .final-score-header {
     width: 20%;
 }
+
+#requeue {
+    margin: 0 auto;
+    display: block;
+}
+
+#order_price {
+    width: auto;
+    min-width: auto;
+}

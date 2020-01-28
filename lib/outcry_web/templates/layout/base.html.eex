@@ -4,15 +4,11 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Outcry: Online Card Game</title>
+    <title>BASE</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="preload" src="<%= Routes.static_path(@conn, "/js/app.js") %>" as="script"></link>
   </head>
   <body>
-    <section class="section">
-      <main role="main" class="container">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-    </section>
-    <script src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <%= render @view_module, @view_template, assigns %>
   </body>
 </html>

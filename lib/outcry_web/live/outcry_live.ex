@@ -137,7 +137,11 @@ defmodule OutcryWeb.OutcryLive do
             <%= Phoenix.View.render(OutcryWeb.GameView, "order_book.html", assigns) %>
             <%= Phoenix.View.render(OutcryWeb.GameView, "trade_history.html", assigns) %>
           </div>
-          <%= Phoenix.View.render(OutcryWeb.GameView, "order_form.html", %{}) %>
+          <div class="tile is-parent" phx-update="ignore">
+            <div class="tile is-child is-3"></div>
+            <%= Phoenix.View.render(OutcryWeb.GameView, "order_form.html", %{}) %>
+            <%= Phoenix.View.render(OutcryWeb.GameView, "timer.html", %{}) %>
+          </div>
         </div>
       </div>
       <% :game_starting -> %>

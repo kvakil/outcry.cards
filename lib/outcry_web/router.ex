@@ -18,6 +18,8 @@ defmodule OutcryWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/help", PageController, :help
+    get "/tips", PageController, :tips
 
     live "/play", OutcryLive
   end

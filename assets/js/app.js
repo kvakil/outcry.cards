@@ -2,28 +2,29 @@
 // The MiniCssExtractPlugin is used to separate it out into
 // its own CSS file.
 import css from "../css/app.css";
-
-// webpack automatically bundles all modules in your
-// entry points. Those entry points can be configured
-// in "webpack.config.js".
-//
-// Import dependencies
-//
 import "phoenix_html";
 
-// Import local files
-//
-// Local files can be imported directly using relative paths, for example:
-// import socket from "./socket"
+/* This handler MUST run before Phoenix socket is imported. */
+window.addEventListener("beforeunload", e => { 
+    e.preventDefault();
+    /* Phoenix will unload the socket if it sees beforeunload. */
+    e.stopImmediatePropagation();
+    return e.returnValue = "Are you sure you want to leave?";
+});
+
 import {Socket} from "phoenix";
 
-const Hooks = {};
+let socket = new Socket("/socket", {});
 
-// Animates an element once, even if morphdom tries to recreate it.
+import LiveSocket from "phoenix_live_view";
+
+/* Animates an element once, even if morphdom tries to delete & recreate it. */
 function animateOnce(element, animationClass) {
     element.classList.add(animationClass);
     element.addEventListener("animationend", _e => element.classList.remove(animationClass));
 }
+
+const Hooks = {};
 
 Hooks.Order = {
     mounted() {
@@ -39,7 +40,9 @@ Hooks.History = {
 };
 
 Hooks.Points = {
-    previousPoints: {},
+    mounted() {
+        this.previousPoints = {};
+    },
 
     updated() {
         const previous = this.previousPoints[this.el.id];
@@ -55,7 +58,9 @@ Hooks.Points = {
 };
 
 Hooks.Hand = {
-    previousHand: {},
+    mounted() {
+        this.previousHand = {};
+    },
 
     updated() {
         const previous = this.previousHand[this.el.id];
@@ -67,20 +72,42 @@ Hooks.Hand = {
 
         const animationClass = ((previous > current) ? "sell" : "buy") + "-animated";
         animateOnce(this.el, animationClass);
-    }
+    },
 };
 
-Hooks.EndGame = {
+function getUnixTime() {
+    return new Date().getTime();
+}
+
+Hooks.Timer = {
+    interval: null,
+
     mounted() {
-        Hooks.Points.previousPoints = {};
-        Hooks.Hand.previousHand = {};
+        const startTime = getUnixTime();
+        const twoMinutes = 2 * 60 * 1000;
+        const endTime = startTime + twoMinutes;
+        this.interval = setInterval(() => {
+            const now = getUnixTime();
+            const timeLeft = endTime - now;
+            const fractionTimeLeft = timeLeft / twoMinutes;
+            if (fractionTimeLeft <= 0) {
+                fractionTimeLeft = 0;
+            }
+            if (fractionTimeLeft <= 0.15) {
+                this.el.classList.add("is-danger");
+            }
+            this.el.value = fractionTimeLeft;
+            this.el.innerText = this.el.title = Math.round(timeLeft / 1000) + " seconds";
+        }, 1000);
+    },
+
+    destroyed() {
+        if (this.interval !== null) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
     }
 };
-
-let socket = new Socket("/socket", {});
-
-// LiveView
-import LiveSocket from "phoenix_live_view";
 
 let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks });
 liveSocket.connect();
@@ -141,13 +168,13 @@ const actionMap = {
     "Enter": _e => submitOrder()
 }
 
-function isTypingPrice() {
+function isTypingPrice(e) {
     const el = document.activeElement;
-    return el && el.id == "order_price";
+    return el && el.id == "order_price" && e.code.startsWith("Digit");
 }
 
 document.addEventListener("keydown", e => {
-    if (isTypingPrice()) {
+    if (isTypingPrice(e)) {
         return false;
     }
     if (e.ctrlKey || e.altKey) {

@@ -1,72 +1,68 @@
-<div class="tile is-parent" phx-update="ignore">
-  <div class="tile is-child is-3"></div>
-  <div class="tile is-child is-6">
-    <%= f = form_for :order, "#", [phx_submit: :order, id: "order"] %>
-    <div class="field is-horizontal">
-      <div class="field-label">
-        <%= label f, :direction, "Direction", [class: "label"] %>
-      </div>
-      <div class="field-body is-narrow">
-        <div class="field">
-          <label class="radio">
-            <%= radio_button f, :direction, "buy", [required: true] %>
-            buy (<kbd>a</kbd>)
-          </label>
-          <label class="radio">
-            <%= radio_button f, :direction, "sell", [required: true] %>
-            sell (<kbd>s</kbd>)
-          </label>
-        </div>
+<div class="tile is-child is-6">
+  <%= f = form_for :order, "#", [phx_submit: :order, id: "order"] %>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= label f, :direction, "Direction", [class: "label"] %>
+    </div>
+    <div class="field-body is-narrow">
+      <div class="field">
+        <label class="radio">
+          <%= radio_button f, :direction, "buy", [required: true] %>
+          buy (<kbd>a</kbd>)
+        </label>
+        <label class="radio">
+          <%= radio_button f, :direction, "sell", [required: true] %>
+          sell (<kbd>s</kbd>)
+        </label>
       </div>
     </div>
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <%= label f, :suit, "Suit", [class: "label"] %>
-      </div>
-      <div class="field-body is-narrow">
-        <div class="select">
-          <%= select f, :suit, ["", "h", "j", "k", "l"], [required: true] %>
-        </div>
-      </div>
-    </div>
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <%= label f, :price, "Price", [class: "label"] %>
-      </div>
-      <div class="field-body">
-        <%= number_input f, :price, [min: 0, max: 200, class: "input", required: "", placeholder: "(use number keys)"] %>
-      </div>
-    </div>
-    <div class="field is-horizontal">
-      <div class="field-label">
-        <label class="label">Type</label>
-      </div>
-      <div class="field-body is-narrow">
-        <div class="field">
-          <label class="radio">
-            <%= radio_button f, :type, :limit, [checked: ""] %>
-            Limit (<kbd>z</kbd>)
-          </label>
-          <label class="radio">
-            <%= radio_button f, :type, :market %>
-            Market (<kbd>x</kbd>)
-          </label>
-          <label class="radio">
-            <%= radio_button f, :type, :cancel %>
-            Cancel (<kbd>c</kbd>)
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="field is-horizontal">
-      <div class="field-label is-normal"></div>
-      <div class="field-body">
-        <div class="control">
-          <%= submit "Submit (Enter)", [id: "order_submit", class: "button is-link"] %>
-        </div>
-      </div>
-    </div>
-    </form>
   </div>
-  <div class="tile is-child is-3"></div>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= label f, :suit, "Suit", [class: "label"] %>
+    </div>
+    <div class="field-body is-narrow">
+      <div class="select">
+        <%= select f, :suit, ["", "h", "j", "k", "l"], [required: true] %>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= label f, :price, "Price", [class: "label"] %>
+    </div>
+    <div class="field-body">
+      <%= number_input f, :price, [min: 0, max: 200, class: "input", required: "", placeholder: "(use number keys)"] %>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label">Type</label>
+    </div>
+    <div class="field-body is-narrow">
+      <div class="field">
+        <label class="radio">
+          <%= radio_button f, :type, :limit, [checked: ""] %>
+          Limit (<kbd>z</kbd>)
+        </label>
+        <label class="radio">
+          <%= radio_button f, :type, :market %>
+          Market (<kbd>x</kbd>)
+        </label>
+        <label class="radio">
+          <%= radio_button f, :type, :cancel %>
+          Cancel (<kbd>c</kbd>)
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"></div>
+    <div class="field-body">
+      <div class="control">
+        <%= submit "Submit (Enter)", [id: "order_submit", class: "button is-link"] %>
+      </div>
+    </div>
+  </div>
+  </form>
 </div>
