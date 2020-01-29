@@ -58,22 +58,14 @@ defmodule Outcry.Game do
     {common_suit, 12} = Enum.max_by(card_distribution, fn {_suit, count} -> count end)
     goal_suit = Suit.opposite_suit(common_suit)
 
-    deck =
+    shuffled_deck =
       Enum.flat_map(card_distribution, fn {suit, count} -> List.duplicate(suit, count) end)
       |> Enum.shuffle()
 
-    initial_counts = Map.new(Suit.all_suits(), &{&1, 0})
-
-    count_suits = fn raw_hand ->
-      Enum.reduce(raw_hand, initial_counts, fn suit, counts ->
-        Map.update!(counts, suit, &(&1 + 1))
-      end)
-    end
-
     hands =
-      deck
+      shuffled_deck
       |> Enum.chunk_every(10)
-      |> Enum.map(count_suits)
+      |> Enum.map(&Enum.frequencies/1)
       |> (&Enum.zip(players, &1)).()
       |> Map.new()
 
