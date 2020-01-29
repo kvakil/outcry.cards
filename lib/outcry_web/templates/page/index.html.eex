@@ -11,517 +11,522 @@
   </div>
 </section>
 <section class="section">
+  <div class="container has-text-centered">
+    <button class="button is-link is-large" onclick="window.location = '/play';">
+      Play Now
+    </button>
+  </div>
   <div class="container content">
     <h2>Rules</h2>
 
-<p>Outcry is played with a deck of 40 cards and four players.
-There are four suits (<tt>h</tt>, <tt>j</tt>, <tt>k</tt>, and <tt>l</tt>).
-All cards of the same suit are identical.
-Two suits have 10 cards each, one suit has 8 cards and one suit has 12 cards.
-The players do not know how many cards there are of each suit &ndash;
-it is decided randomly at the start of the game.</p>
+    <p>Outcry is played with a deck of 40 cards and four players.
+    There are four suits (<tt>h</tt>, <tt>j</tt>, <tt>k</tt>, and <tt>l</tt>).
+    All cards of the same suit are identical.
+    Two suits have 10 cards each, one suit has 8 cards and one suit has 12 cards.
+    The players do not know how many cards there are of each suit &ndash;
+    it is decided randomly at the start of the game.</p>
 
-<p>The suit with 12 cards is called the <em>common suit</em>.
-The <em>goal suit</em> is the suit <em>opposite</em> the common suit:
-the suits <tt>h</tt> and <tt>l</tt> are opposites,
-and the suits <tt>j</tt> and <tt>k</tt> are opposites.
-The goal of the game is to collect as many cards of the goal suit as you can,
-all other suits will end up worthless!
-</p>
+    <p>The suit with 12 cards is called the <em>common suit</em>.
+    The <em>goal suit</em> is the suit <em>opposite</em> the common suit:
+    the suits <tt>h</tt> and <tt>l</tt> are opposites,
+    and the suits <tt>j</tt> and <tt>k</tt> are opposites.
+    The goal of the game is to collect as many cards of the goal suit as you can,
+    all other suits will end up worthless!
+    </p>
 
-<article class="message is-warning">
-  <div class="message-header">
-    <p>Misconception: Goal Suit</p>
-  </div>
-  <div class="message-body">
-    <p>The goal suit is <em>not necessarily</em> the suit with 8 cards.
-    It is determined by following the rule above.
-    Because of the rule, the goal suit will never have 12 cards.
-    There is a 2/3 chance the goal suit has 10 cards and a 1/3 chance the goal suit has 8 cards.</p>
-  </div>
-</article>
+    <article class="message is-warning">
+      <div class="message-header">
+        <p>Misconception: Goal Suit</p>
+      </div>
+      <div class="message-body">
+        <p>The goal suit is <em>not necessarily</em> the suit with 8 cards.
+        It is determined by following the rule above.
+        Because of the rule, the goal suit will never have 12 cards.
+        There is a 2/3 chance the goal suit has 10 cards and a 1/3 chance the goal suit has 8 cards.</p>
+      </div>
+    </article>
 
-<p>
-At the start of the game, each player puts 50 points into the pot and receives 10 cards.
-Afterwards, players begin trading cards.
-Players buy and sell cards in exchange for points.
-While nobody knows which card the goal suit is, players may have guesses based on their own hand.
-</p>
+    <p>
+    At the start of the game, each player puts 50 points into the pot and receives 10 cards.
+    Afterwards, players begin trading cards.
+    Players buy and sell cards in exchange for points.
+    While nobody knows which card the goal suit is, players may have guesses based on their own hand.
+    </p>
 
-<blockquote>
-  <p><strong>Player Q:</strong> Selling <tt>h</tt> for 8 points.
-  <p><strong>Player W:</strong> OK, I'll buy an <tt>h</tt> for 8.
+    <blockquote>
+      <p><strong>Player Q:</strong> Selling <tt>h</tt> for 8 points.
+      <p><strong>Player W:</strong> OK, I'll buy an <tt>h</tt> for 8.
 
-  <p>[Player Q gives a single <tt>h</tt> to Player W, and
-  Player W gives 8 points to Player Q.]</p>
-</blockquote>
+      <p>[Player Q gives a single <tt>h</tt> to Player W, and
+      Player W gives 8 points to Player Q.]</p>
+    </blockquote>
 
-<p>
-There are no turns: all players make offers at the same time.
-When a player makes an offer to buy or sell a card, that offer stands until they cancel it or a trade occurs.
-Any trade in any suit automatically cancels all standing offers, including offers for other suits.
-</p>
+    <p>
+    There are no turns: all players make offers at the same time.
+    When a player makes an offer to buy or sell a card, that offer stands until they cancel it or a trade occurs.
+    Any trade in any suit automatically cancels all standing offers, including offers for other suits.
+    </p>
 
-<p>
-After two minutes of trading, the game ends and all players show their hands.
-This lets the players determine the common suit, and therefore the goal suit by following the rules above.
-</p>
+    <p>
+    After two minutes of trading, the game ends and all players show their hands.
+    This lets the players determine the common suit, and therefore the goal suit by following the rules above.
+    </p>
 
-<p>
-Each player gets 10 points for each goal suit card they have collected.
-All other cards are worthless.
-The player with the plurality of goal suit cards receives the rest of the pot (either 100 or 120 points)
-as the <i>majority bonus</i>.
-(If there is a tie, the bonus is split between the tied players.)
-This bonus is quite substantial, so players are encouraged to attempt to
-collect majorities.
-</p>
+    <p>
+    Each player gets 10 points for each goal suit card they have collected.
+    All other cards are worthless.
+    The player with the plurality of goal suit cards receives the rest of the pot (either 100 or 120 points)
+    as the <i>majority bonus</i>.
+    (If there is a tie, the bonus is split between the tied players.)
+    This bonus is quite substantial, so players are encouraged to attempt to
+    collect majorities.
+    </p>
 
 
-<article class="message is-info">
-  <div class="message-header">
-    <p>Tip: Card Worth</p>
-  </div>
-  <div class="message-body">
-    <p>At the start of the game, each player gets 10 cards in exchange for putting 50 points into the pot.
-    Because of this, the average card should trade for 5 points (50 divided by 10).</p>
+    <article class="message is-info">
+      <div class="message-header">
+        <p>Tip: Card Worth</p>
+      </div>
+      <div class="message-body">
+        <p>At the start of the game, each player gets 10 cards in exchange for putting 50 points into the pot.
+        Because of this, the average card should trade for 5 points (50 divided by 10).</p>
 
-    <p>Usually a goal card should trade for at most 10 points.
-    However, a goal card could be worth more if it lets the buyer reach the majority bonus!</p>
-  </div>
-</article>
+        <p>Usually a goal card should trade for at most 10 points.
+        However, a goal card could be worth more if it lets the buyer reach the majority bonus!</p>
+      </div>
+    </article>
 
     <h2>Game Interface</h2>
 
-    <p>Here is what the game interface looks like:</p>
+    <p>Here is what the game interface looks like, decomposed item-by-item:</p>
   </div>
 
-<div class="container">
-  <div class="tile is-ancestor">
-    <div class="tile is-parent is-vertical">
-      <div class="tile is-parent">
-        <div class="tile is-child is-3 box">
-<table class="table is-bordered is-fullwidth">
-  <thead>
-  <tr><th>Player</th>
-  <th>Points</th>
-  </tr></thead>
-  <tbody>
-    <tr>
-      <td class="player">Q
-        <abbr title="You are player Q.">(*)</abbr>
-      </td>
-      <td id="points-Q" class="points">2</td>
-    </tr>
-    <tr>
-      <td class="player">W
-      </td>
-      <td id="points-W" class="points">-4</td>
-    </tr>
-    <tr>
-      <td class="player">E
-      </td>
-      <td id="points-E" class="points">2</td>
-    </tr>
-    <tr>
-      <td class="player">R
-      </td>
-      <td id="points-R" class="points">0</td>
-    </tr>
-</tbody></table>
-</div>
+  <div class="container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical">
+        <div class="tile is-parent">
+          <div class="tile is-child is-3 box">
+            <table class="table is-bordered is-fullwidth">
+              <thead>
+                <tr><th>Player</th>
+                  <th>Points</th>
+                </tr></thead>
+                <tbody>
+                  <tr>
+                    <td class="player">Q
+                      <abbr title="You are player Q.">(*)</abbr>
+                    </td>
+                    <td id="points-Q" class="points">2</td>
+                  </tr>
+                  <tr>
+                    <td class="player">W
+                    </td>
+                    <td id="points-W" class="points">-4</td>
+                  </tr>
+                  <tr>
+                    <td class="player">E
+                    </td>
+                    <td id="points-E" class="points">2</td>
+                  </tr>
+                  <tr>
+                    <td class="player">R
+                    </td>
+                    <td id="points-R" class="points">0</td>
+                  </tr>
+                </tbody></table>
+                <div class="content">
+                  <p>This shows how many points each player currently has from trading.
+                  The <tt>(*)</tt> indicates your player: here you are player <tt>Q</tt>.</p>
+                </div>
+          </div>
 
-        <div class="tile is-child is-6 box" id="order_book">
-  <table class="table is-bordered is-fullwidth">
-    <thead>
-    <tr><th class="order-book-buy" align="">Buy</th>
-    <th align="">Suit</th>
-    <th class="order-book-sell" align="">Sell</th>
-    </tr></thead>
-    <tbody>
-    <tr id="order-book-h">
-      <td class="order-book-side order-book-buy" align="">
-          <span class="order-book-order" id="order-book-order-R-h-buy-2">
-          2<sup>R</sup>
-          </span>
-          <span class="order-book-order" id="order-book-order-Q-h-buy-3">
-          3<sup>Q</sup>
-          </span>
-          </td><td class="has-text-centered order-book-suit">
-h          <abbr id="hand_h" class="hand" title="You have 0 cards of suit h.">
-          (0)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-          <span class="order-book-order" id="order-book-order-W-h-sell-5">
-          5<sup>W</sup>
-          </span>
-      </td>
-      
-    </tr>
-    <tr id="order-book-j">
-      <td class="order-book-side order-book-buy" align="">
-          <span class="order-book-order" id="order-book-order-Q-j-buy-2" phx-hook="Order">
-          2<sup>Q</sup>
-          </span>
-          </td><td class="has-text-centered order-book-suit">
-j          <abbr id="hand_j" class="hand" title="You have 2 cards of suit j." phx-hook="Hand">
-          (2)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-      </td>
-      
-    </tr>
-    <tr id="order-book-k">
-      <td class="order-book-side order-book-buy" align="">
-          </td><td class="has-text-centered order-book-suit">
-k          <abbr id="hand_k" class="hand" title="You have 2 cards of suit k." phx-hook="Hand">
-          (2)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-      </td>
-      
-    </tr>
-    <tr id="order-book-l">
-      <td class="order-book-side order-book-buy" align="">
-          <span class="order-book-order" id="order-book-order-Q-l-buy-5" phx-hook="Order">
-          5<sup>Q</sup>
-          </span>
-          </td><td class="has-text-centered order-book-suit">
-l          <abbr id="hand_l" class="hand" title="You have 6 cards of suit l." phx-hook="Hand">
-          (6)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-          <span class="order-book-order" id="order-book-order-W-l-sell-6" phx-hook="Order">
-          6<sup>W</sup>
-          </span>
-      </td>
-      
-    </tr>
-    </tbody>
-  </table>
-</div>
+          <div class="tile is-child is-6 box" id="order_book">
+            <table class="table is-bordered is-fullwidth">
+              <thead>
+                <tr><th class="order-book-buy" align="">Buy</th>
+                  <th align="">Suit</th>
+                  <th class="order-book-sell" align="">Sell</th>
+                </tr></thead>
+                <tbody>
+                  <tr id="order-book-h">
+                    <td class="order-book-side order-book-buy" align="">
+                      <span class="order-book-order" id="order-book-order-R-h-buy-2">
+                        2<sup>R</sup>
+                      </span>
+                      <span class="order-book-order" id="order-book-order-Q-h-buy-3">
+                        3<sup>Q</sup>
+                      </span>
+                    </td><td class="has-text-centered order-book-suit">
+                      h          <abbr id="hand_h" class="hand" title="You have 0 cards of suit h.">
+                        (0)</abbr></td>
 
-        <div id="trade_history_container" class="tile is-3 is-child box">
-  <p class="label">Trade History</p>
-  <div id="trade_history" phx-update="append">
-  
-    <p id="trade_history_0" class="trade-history-item">W+h &amp; Q+4</p>
-    <p id="trade_history_1" class="trade-history-item">
-    Q+l &amp; E+2
-    </p>
-  </div>
-</div>
+                    <td class="order-book-side order-book-sell" align="">
+                      <span class="order-book-order" id="order-book-order-W-h-sell-5">
+                        5<sup>W</sup>
+                      </span>
+                    </td>
 
-      </div>
-      <div class="tile is-parent" phx-update="ignore">
-        <div class="tile is-child is-3"></div>
-        <div class="tile is-child is-6">
-<form accept-charset="UTF-8" action="#" id="order" method="post" class=""><div class="field is-horizontal">
-    <div class="field-label">
-<label class="label" for="order_direction">Direction</label>    </div>
-    <div class="field-body is-narrow">
-      <div class="field">
-        <label class="radio">
-<input id="order_direction_buy" name="order[direction]" type="radio" value="buy" required="">          buy (<kbd>a</kbd>)
-        </label>
-        <label class="radio">
-<input id="order_direction_sell" name="order[direction]" type="radio" value="sell" required="">          sell (<kbd>s</kbd>)
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-<label class="label" for="order_suit">Suit</label>    </div>
-    <div class="field-body is-narrow">
-      <div class="select">
-<select id="order_suit" name="order[suit]" required=""><option value=""></option><option value="h">h</option><option value="j">j</option><option value="k">k</option><option value="l">l</option></select>      </div>
-    </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-<label class="label" for="order_price">Price</label>    </div>
-    <div class="field-body">
-<input class="input" id="order_price" max="200" min="0" name="order[price]" placeholder="(use number keys)" required="" type="number">    </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <label class="label">Type</label>
-    </div>
-    <div class="field-body is-narrow">
-      <div class="field">
-        <label class="radio">
-<input checked="" id="order_type_limit" name="order[type]" type="radio" value="limit">          Limit (<kbd>z</kbd>)
-        </label>
-        <label class="radio">
-<input id="order_type_market" name="order[type]" type="radio" value="market">          Market (<kbd>x</kbd>)
-        </label>
-        <label class="radio">
-<input id="order_type_cancel" name="order[type]" type="radio" value="cancel">          Cancel (<kbd>c</kbd>)
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal"></div>
-    <div class="field-body">
-      <div class="control">
-<button class="button is-link" id="order_submit" type="submit">Submit (Enter)</button>      </div>
-    </div>
-  </div>
-  </form>
-</div>
+                  </tr>
+                  <tr id="order-book-j">
+                    <td class="order-book-side order-book-buy" align="">
+                      <span class="order-book-order" id="order-book-order-Q-j-buy-2" phx-hook="Order">
+                        2<sup>Q</sup>
+                      </span>
+                    </td><td class="has-text-centered order-book-suit">
+                      j          <abbr id="hand_j" class="hand" title="You have 2 cards of suit j." phx-hook="Hand">
+                        (2)</abbr></td>
 
-        <div id="timer_container" class="tile is-child is-3">
-  <label class="label" for="timer">Time Remaining</label>
-  <progress id="timer" class="progress" phx-hook="Timer" value="0.370833333333333" title="45 seconds">45 seconds</progress>
-</div>
+                    <td class="order-book-side order-book-sell" align="">
+                    </td>
 
-      </div>
-    </div>
-  </div>
-  
-    <p>There is a lot of information here, so let's decompose it step-by-step!</p>
+                  </tr>
+                  <tr id="order-book-k">
+                    <td class="order-book-side order-book-buy" align="">
+                    </td><td class="has-text-centered order-book-suit">
+                      k          <abbr id="hand_k" class="hand" title="You have 2 cards of suit k." phx-hook="Hand">
+                        (2)</abbr></td>
 
-<div class="container">
-  <div class="tile is-ancestor">
-    <div class="tile is-parent is-vertical">
-      <div class="tile is-parent">
-        <div class="tile is-child is-3 box">
-<table class="table is-bordered is-fullwidth">
-  <thead>
-  <tr><th>Player</th>
-  <th>Points</th>
-  </tr></thead>
-  <tbody>
-    <tr>
-      <td class="player">Q
-        <abbr title="You are player Q.">(*)</abbr>
-      </td>
-      <td id="points-Q" class="points">2</td>
-    </tr>
-    <tr>
-      <td class="player">W
-      </td>
-      <td id="points-W" class="points">-4</td>
-    </tr>
-    <tr>
-      <td class="player">E
-      </td>
-      <td id="points-E" class="points">2</td>
-    </tr>
-    <tr>
-      <td class="player">R
-      </td>
-      <td id="points-R" class="points">0</td>
-    </tr>
-</tbody></table>
-<div class="content">
-        <p>This shows how many points each player currently has from trading.
-        The <tt>(*)</tt> indicates your player: here you are player <tt>Q</tt>.</p>
-</div>
-</div>
+                    <td class="order-book-side order-book-sell" align="">
+                    </td>
 
-        <div class="tile is-child is-6 box" id="order_book">
-  <table class="table is-bordered is-fullwidth">
-    <thead>
-    <tr><th class="order-book-buy" align="">Buy</th>
-    <th align="">Suit</th>
-    <th class="order-book-sell" align="">Sell</th>
-    </tr></thead>
-    <tbody>
-    <tr id="order-book-h">
-      <td class="order-book-side order-book-buy" align="">
-          <span class="order-book-order" id="order-book-order-R-h-buy-2">
-          2<sup>R</sup>
-          </span>
-          <span class="order-book-order" id="order-book-order-Q-h-buy-3">
-          3<sup>Q</sup>
-          </span>
-          </td><td class="has-text-centered order-book-suit">
-h          <abbr id="hand_h" class="hand" title="You have 0 cards of suit h.">
-          (0)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-          <span class="order-book-order" id="order-book-order-W-h-sell-5">
-          5<sup>W</sup>
-          </span>
-      </td>
-      
-    </tr>
-    <tr id="order-book-j">
-      <td class="order-book-side order-book-buy" align="">
-          <span class="order-book-order" id="order-book-order-Q-j-buy-2" phx-hook="Order">
-          2<sup>Q</sup>
-          </span>
-          </td><td class="has-text-centered order-book-suit">
-j          <abbr id="hand_j" class="hand" title="You have 2 cards of suit j." phx-hook="Hand">
-          (2)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-      </td>
-      
-    </tr>
-    <tr id="order-book-k">
-      <td class="order-book-side order-book-buy" align="">
-          </td><td class="has-text-centered order-book-suit">
-k          <abbr id="hand_k" class="hand" title="You have 2 cards of suit k." phx-hook="Hand">
-          (2)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-      </td>
-      
-    </tr>
-    <tr id="order-book-l">
-      <td class="order-book-side order-book-buy" align="">
-          <span class="order-book-order" id="order-book-order-Q-l-buy-5" phx-hook="Order">
-          5<sup>Q</sup>
-          </span>
-          </td><td class="has-text-centered order-book-suit">
-l          <abbr id="hand_l" class="hand" title="You have 6 cards of suit l." phx-hook="Hand">
-          (6)</abbr></td>
-      
-      <td class="order-book-side order-book-sell" align="">
-          <span class="order-book-order" id="order-book-order-W-l-sell-6" phx-hook="Order">
-          6<sup>W</sup>
-          </span>
-      </td>
-      
-    </tr>
-    </tbody>
-  </table>
-  <div class="content">
-      <p>This is the most important part of the game: the order book.
-      It shows what offers are currently available, as well as your current hand.
-      </p>
+                  </tr>
+                  <tr id="order-book-l">
+                    <td class="order-book-side order-book-buy" align="">
+                      <span class="order-book-order" id="order-book-order-Q-l-buy-5" phx-hook="Order">
+                        5<sup>Q</sup>
+                      </span>
+                    </td><td class="has-text-centered order-book-suit">
+                      l          <abbr id="hand_l" class="hand" title="You have 6 cards of suit l." phx-hook="Hand">
+                        (6)</abbr></td>
 
-      <p>For example, reading the <tt>h</tt> row, we see that Players
-      <tt>R</tt> and <tt>Q</tt> are willing to buy an <tt>h</tt> for 2
-      and 3 points (respectively).  Player <tt>W</tt> is willing to sell
-      an <tt>h</tt> for 5 points. We can also see that we currently have
-      zero <tt>h</tt> in our hand, as indicated by the parentheses in
-      the middle column.</p>
-    </div>
-</div>
+                    <td class="order-book-side order-book-sell" align="">
+                      <span class="order-book-order" id="order-book-order-W-l-sell-6" phx-hook="Order">
+                        6<sup>W</sup>
+                      </span>
+                    </td>
 
-        <div id="trade_history_container" class="tile is-3 is-child box">
-  <p class="label">Trade History</p>
-  <div id="trade_history" phx-update="append">
-  
-    <p id="trade_history_0" class="trade-history-item">W+h &amp; Q+4</p>
-    <p id="trade_history_1" class="trade-history-item">
-    Q+l &amp; E+2
-    </p>
-  </div>
-  <div class="content">
-    <p>The trade history shows trades which have already happened.  Here
-    <tt>W+h &amp; Q+4</tt> means that a trade occured where <tt>W</tt>
-    got an <tt>h</tt> and <tt>Q</tt> got <tt>4</tt> points.</p>
+                  </tr>
+                </tbody>
+            </table>
+            <div class="content">
+              <p>This is the most important part of the game: the order book.
+              It shows what offers are currently available, as well as your current hand.
+              </p>
 
-    <p>New trades are added to the end of this list.</p>
-  </div>
-</div>
+              <p>For example, reading the <tt>h</tt> row, we see that Players
+              <tt>R</tt> and <tt>Q</tt> are willing to buy an <tt>h</tt> for 2
+              and 3 points (respectively).  Player <tt>W</tt> is willing to sell
+              an <tt>h</tt> for 5 points. We can also see that we currently have
+              zero <tt>h</tt> in our hand, as indicated by the parentheses in
+              the middle column.</p>
+            </div>
+          </div>
 
-      </div>
-      <div class="tile is-parent" phx-update="ignore">
-        <div class="tile is-child is-3"></div>
-        <div class="tile is-child is-6">
-<form accept-charset="UTF-8" action="#" id="order" method="post" class=""><div class="field is-horizontal">
-    <div class="field-label">
-<label class="label" for="order_direction">Direction</label>    </div>
-    <div class="field-body is-narrow">
-      <div class="field">
-        <label class="radio">
-<input id="order_direction_buy" name="order[direction]" type="radio" value="buy" required="">          buy (<kbd>a</kbd>)
-        </label>
-        <label class="radio">
-<input id="order_direction_sell" name="order[direction]" type="radio" value="sell" required="">          sell (<kbd>s</kbd>)
-        </label>
+          <div id="trade_history_container" class="tile is-3 is-child box">
+            <p class="label">Trade History</p>
+            <div id="trade_history" phx-update="append">
+
+              <p id="trade_history_0" class="trade-history-item">W+h &amp; Q+4</p>
+              <p id="trade_history_1" class="trade-history-item">
+              Q+l &amp; E+2
+              </p>
+            </div>
+            <div class="content">
+              <p>The trade history shows trades which have already happened.  Here
+              <tt>W+h &amp; Q+4</tt> means that a trade occured where <tt>W</tt>
+              got an <tt>h</tt> and <tt>Q</tt> got <tt>4</tt> points.</p>
+
+              <p>New trades are added to the end of this list.</p>
+            </div>
+          </div>
+
+        </div>
+        <div class="tile is-parent" phx-update="ignore">
+          <div class="tile is-child is-3"></div>
+          <div class="tile is-child is-6">
+            <form accept-charset="UTF-8" action="#" id="order" method="post" class=""><div class="field is-horizontal">
+                <div class="field-label">
+                  <label class="label" for="order_direction">Direction</label>    </div>
+                <div class="field-body is-narrow">
+                  <div class="field">
+                    <label class="radio">
+                      <input id="order_direction_buy" name="order[direction]" type="radio" value="buy" required="">          buy (<kbd>a</kbd>)
+                    </label>
+                    <label class="radio">
+                      <input id="order_direction_sell" name="order[direction]" type="radio" value="sell" required="">          sell (<kbd>s</kbd>)
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label" for="order_suit">Suit</label>    </div>
+                <div class="field-body is-narrow">
+                  <div class="select">
+                    <select id="order_suit" name="order[suit]" required=""><option value=""></option><option value="h">h</option><option value="j">j</option><option value="k">k</option><option value="l">l</option></select>      </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label" for="order_price">Price</label>    </div>
+                <div class="field-body">
+                  <input class="input" id="order_price" max="200" min="0" name="order[price]" placeholder="(use number keys)" required="" type="number">    </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label">
+                  <label class="label">Type</label>
+                </div>
+                <div class="field-body is-narrow">
+                  <div class="field">
+                    <label class="radio">
+                      <input checked="" id="order_type_limit" name="order[type]" type="radio" value="limit">          Limit (<kbd>z</kbd>)
+                    </label>
+                    <label class="radio">
+                      <input id="order_type_market" name="order[type]" type="radio" value="market">          Market (<kbd>x</kbd>)
+                    </label>
+                    <label class="radio">
+                      <input id="order_type_cancel" name="order[type]" type="radio" value="cancel">          Cancel (<kbd>c</kbd>)
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal"></div>
+                <div class="field-body">
+                  <div class="control">
+                    <button class="button is-link" id="order_submit" type="submit">Submit (Enter)</button>      </div>
+                </div>
+              </div>
+            </form>
+
+            <br>
+            <div class="content">
+              <p>You can use this form to submit orders.</p>
+
+              <p>Each order is composed of several parts:</p>
+
+              <ol>
+                <li><strong>Direction:</strong> whether you are buying or selling this suit.</li>
+                <li><strong>Suit:</strong> which suit you are trading.</li>
+                <li><strong>Price:</strong> the price you wish to buy or sell at (used only if this is a Limit order).</li>
+                <li><strong>Type:</strong> there are different types of orders:
+                  <ul>
+                    <li><em>Limit:</em> indicates you want to trade at a certain price.</li>
+                    <li><em>Market:</em> indicates you want to trade at the current market price.
+                      If no offers are currently on the market, then nothing happens.</li>
+                    <li><em>Cancel:</em> cancels an existing order (for a given Direction and Suit).</li>
+                  </ul>
+                </li>
+
+              </ol>
+
+
+              <p>Keyboard shortcuts are also shown in parenthesis.
+              In addition, you can interact with the Suit and Price fields via the keyboard.
+              For example, to set a limit order to buy <tt>h</tt> for 8 points, you can type
+              <kbd>ah8z</kbd> followed by <tt>Enter</tt> to send the order.</p>
+            </div>
+          </div>
+
+          <div id="timer_container" class="tile is-child is-3">
+            <label class="label" for="timer">Time Remaining</label>
+            <progress id="timer" class="progress" phx-hook="Timer" value="0.370833333333333" title="45 seconds">45 seconds</progress>
+            <div class="content">
+              <p>As the time runs out, this bar grows smaller.
+              You can mouse-over the bar to see the exact amount of time left.</p>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-<label class="label" for="order_suit">Suit</label>    </div>
-    <div class="field-body is-narrow">
-      <div class="select">
-<select id="order_suit" name="order[suit]" required=""><option value=""></option><option value="h">h</option><option value="j">j</option><option value="k">k</option><option value="l">l</option></select>      </div>
+    <div class="content">
+      <p>Putting it all together, we get:</p>
     </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-<label class="label" for="order_price">Price</label>    </div>
-    <div class="field-body">
-<input class="input" id="order_price" max="200" min="0" name="order[price]" placeholder="(use number keys)" required="" type="number">    </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <label class="label">Type</label>
-    </div>
-    <div class="field-body is-narrow">
-      <div class="field">
-        <label class="radio">
-<input checked="" id="order_type_limit" name="order[type]" type="radio" value="limit">          Limit (<kbd>z</kbd>)
-        </label>
-        <label class="radio">
-<input id="order_type_market" name="order[type]" type="radio" value="market">          Market (<kbd>x</kbd>)
-        </label>
-        <label class="radio">
-<input id="order_type_cancel" name="order[type]" type="radio" value="cancel">          Cancel (<kbd>c</kbd>)
-        </label>
+    <div class="container">
+      <div class="tile is-ancestor">
+        <div class="tile is-parent is-vertical">
+          <div class="tile is-parent">
+            <div class="tile is-child is-3 box">
+              <table class="table is-bordered is-fullwidth">
+                <thead>
+                  <tr><th>Player</th>
+                    <th>Points</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr>
+                      <td class="player">Q
+                        <abbr title="You are player Q.">(*)</abbr>
+                      </td>
+                      <td id="points-Q" class="points">2</td>
+                    </tr>
+                    <tr>
+                      <td class="player">W
+                      </td>
+                      <td id="points-W" class="points">-4</td>
+                    </tr>
+                    <tr>
+                      <td class="player">E
+                      </td>
+                      <td id="points-E" class="points">2</td>
+                    </tr>
+                    <tr>
+                      <td class="player">R
+                      </td>
+                      <td id="points-R" class="points">0</td>
+                    </tr>
+                  </tbody></table>
+            </div>
+
+            <div class="tile is-child is-6 box" id="order_book">
+              <table class="table is-bordered is-fullwidth">
+                <thead>
+                  <tr><th class="order-book-buy" align="">Buy</th>
+                    <th align="">Suit</th>
+                    <th class="order-book-sell" align="">Sell</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr id="order-book-h">
+                      <td class="order-book-side order-book-buy" align="">
+                        <span class="order-book-order" id="order-book-order-R-h-buy-2">
+                          2<sup>R</sup>
+                        </span>
+                        <span class="order-book-order" id="order-book-order-Q-h-buy-3">
+                          3<sup>Q</sup>
+                        </span>
+                      </td><td class="has-text-centered order-book-suit">
+                        h          <abbr id="hand_h" class="hand" title="You have 0 cards of suit h.">
+                          (0)</abbr></td>
+
+                      <td class="order-book-side order-book-sell" align="">
+                        <span class="order-book-order" id="order-book-order-W-h-sell-5">
+                          5<sup>W</sup>
+                        </span>
+                      </td>
+
+                    </tr>
+                    <tr id="order-book-j">
+                      <td class="order-book-side order-book-buy" align="">
+                        <span class="order-book-order" id="order-book-order-Q-j-buy-2" phx-hook="Order">
+                          2<sup>Q</sup>
+                        </span>
+                      </td><td class="has-text-centered order-book-suit">
+                        j          <abbr id="hand_j" class="hand" title="You have 2 cards of suit j." phx-hook="Hand">
+                          (2)</abbr></td>
+
+                      <td class="order-book-side order-book-sell" align="">
+                      </td>
+
+                    </tr>
+                    <tr id="order-book-k">
+                      <td class="order-book-side order-book-buy" align="">
+                      </td><td class="has-text-centered order-book-suit">
+                        k          <abbr id="hand_k" class="hand" title="You have 2 cards of suit k." phx-hook="Hand">
+                          (2)</abbr></td>
+
+                      <td class="order-book-side order-book-sell" align="">
+                      </td>
+
+                    </tr>
+                    <tr id="order-book-l">
+                      <td class="order-book-side order-book-buy" align="">
+                        <span class="order-book-order" id="order-book-order-Q-l-buy-5" phx-hook="Order">
+                          5<sup>Q</sup>
+                        </span>
+                      </td><td class="has-text-centered order-book-suit">
+                        l          <abbr id="hand_l" class="hand" title="You have 6 cards of suit l." phx-hook="Hand">
+                          (6)</abbr></td>
+
+                      <td class="order-book-side order-book-sell" align="">
+                        <span class="order-book-order" id="order-book-order-W-l-sell-6" phx-hook="Order">
+                          6<sup>W</sup>
+                        </span>
+                      </td>
+
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+
+            <div id="trade_history_container" class="tile is-3 is-child box">
+              <p class="label">Trade History</p>
+              <div id="trade_history" phx-update="append">
+
+                <p id="trade_history_0" class="trade-history-item">W+h &amp; Q+4</p>
+                <p id="trade_history_1" class="trade-history-item">
+                Q+l &amp; E+2
+                </p>
+              </div>
+            </div>
+
+          </div>
+          <div class="tile is-parent" phx-update="ignore">
+            <div class="tile is-child is-3"></div>
+            <div class="tile is-child is-6">
+              <form accept-charset="UTF-8" action="#" id="order" method="post" class=""><div class="field is-horizontal">
+                  <div class="field-label">
+                    <label class="label" for="order_direction">Direction</label>    </div>
+                  <div class="field-body is-narrow">
+                    <div class="field">
+                      <label class="radio">
+                        <input id="order_direction_buy" name="order[direction]" type="radio" value="buy" required="">          buy (<kbd>a</kbd>)
+                      </label>
+                      <label class="radio">
+                        <input id="order_direction_sell" name="order[direction]" type="radio" value="sell" required="">          sell (<kbd>s</kbd>)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label" for="order_suit">Suit</label>    </div>
+                  <div class="field-body is-narrow">
+                    <div class="select">
+                      <select id="order_suit" name="order[suit]" required=""><option value=""></option><option value="h">h</option><option value="j">j</option><option value="k">k</option><option value="l">l</option></select>      </div>
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label" for="order_price">Price</label>    </div>
+                  <div class="field-body">
+                    <input class="input" id="order_price" max="200" min="0" name="order[price]" placeholder="(use number keys)" required="" type="number">    </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label">
+                    <label class="label">Type</label>
+                  </div>
+                  <div class="field-body is-narrow">
+                    <div class="field">
+                      <label class="radio">
+                        <input checked="" id="order_type_limit" name="order[type]" type="radio" value="limit">          Limit (<kbd>z</kbd>)
+                      </label>
+                      <label class="radio">
+                        <input id="order_type_market" name="order[type]" type="radio" value="market">          Market (<kbd>x</kbd>)
+                      </label>
+                      <label class="radio">
+                        <input id="order_type_cancel" name="order[type]" type="radio" value="cancel">          Cancel (<kbd>c</kbd>)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal"></div>
+                  <div class="field-body">
+                    <div class="control">
+                      <button class="button is-link" id="order_submit" type="submit">Submit (Enter)</button>      </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div id="timer_container" class="tile is-child is-3">
+              <label class="label" for="timer">Time Remaining</label>
+              <progress id="timer" class="progress" phx-hook="Timer" value="0.370833333333333" title="45 seconds">45 seconds</progress>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal"></div>
-    <div class="field-body">
-      <div class="control">
-<button class="button is-link" id="order_submit" type="submit">Submit (Enter)</button>      </div>
-    </div>
-  </div>
-  </form>
-
-  <br>
-  <div class="content">
-    <p>You can use this form to submit orders.</p>
-
-    <p>Each order is composed of several parts:</p>
-
-    <ol>
-      <li><strong>Direction:</strong> whether you are buying or selling this suit.</li>
-      <li><strong>Suit:</strong> which suit you are trading.</li>
-      <li><strong>Price:</strong> the price you wish to buy or sell at (used only if this is a Limit order).</li>
-      <li><strong>Type:</strong> there are different types of orders:
-        <ul>
-          <li><em>Limit:</em> indicates you want to trade at a certain price.</li>
-          <li><em>Market:</em> indicates you want to trade at the current market price.
-            If no offers are currently on the market, then nothing happens.</li>
-          <li><em>Cancel:</em> cancels an existing order (for a given Direction and Suit).</li>
-        </ul>
-      </li>
-
-    </ol>
-
-
-    <p>Keyboard shortcuts are also shown in parenthesis.
-    In addition, you can interact with the Suit and Price fields via the keyboard.
-    For example, to set a limit order to buy <tt>h</tt> for 8 points, you can type
-    <kbd>ah8z</kbd> followed by <tt>Enter</tt> to send the order.</p>
-  </div>
-</div>
-
-        <div id="timer_container" class="tile is-child is-3">
-  <label class="label" for="timer">Time Remaining</label>
-  <progress id="timer" class="progress" phx-hook="Timer" value="0.370833333333333" title="45 seconds">45 seconds</progress>
-  <div class="content">
-    <p>As the time runs out, this bar grows smaller.
-    You can mouse-over the bar to see the exact amount of time left.</p>
-  </div>
-</div>
-
-      </div>
-    </div>
-  </div>
-  
-</div>
 </section>
