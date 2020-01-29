@@ -318,11 +318,12 @@ defmodule Outcry.GameTest do
   end
 
   test "fuzz game state", %{game: game, players: players} do
+    alias Outcry.Game.Types.{Suit, Direction}
     Enum.each(1..10000, fn _ ->
       type = Enum.random([Limit, Market, Cancel])
       player = Enum.random(players)
-      suit = Enum.random(~w(h j k l)a)
-      direction = Enum.random(~w(buy sell)a)
+      suit = Enum.random(Suit.all_suits())
+      direction = Enum.random(Direction.all_directions())
 
       order =
         case type do
@@ -349,7 +350,7 @@ defmodule Outcry.GameTest do
                         score_info: %{final_scores: final_scores, goal_suit: :j}
                       }}
 
-      assert Enum.sum(Map.values(final_scores)) == 200
+      assert_in_delta Enum.sum(Map.values(final_scores)), 200, 0.1
     end)
   end
 end
