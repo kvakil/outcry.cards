@@ -37,14 +37,19 @@ defmodule OutcryWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
-  plug Plug.Session,
+  @session_options [
     store: :cookie,
     key: "_outcry_key",
-    signing_salt: "MfuUrOvk"
+    signing_salt: "MfuUrOvk",
+    encryption_salt: "QWjz09cY"
+  ]
+
+  plug Plug.Session, @session_options
 
   plug Pow.Plug.Session, otp_app: :outcry
 
   plug OutcryWeb.Router
 
-  socket "/live", Phoenix.LiveView.Socket
+  socket "/live", Phoenix.LiveView.Socket,
+    websocket: [connect_info: [session: @session_options]]
 end

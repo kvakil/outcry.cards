@@ -3,7 +3,7 @@ defmodule OutcryWeb.OutcryLive do
   alias OutcryWeb.MatchmakingPresence
 
   @impl true
-  def mount(%{}, socket) do
+  def mount(%{}, _params, socket) do
     {:ok,
      socket
      |> assign(user_id: inspect(self()), status: :in_queue),

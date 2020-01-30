@@ -7,8 +7,6 @@ import "phoenix_html";
 /* This handler MUST run before Phoenix socket is imported. */
 window.addEventListener("beforeunload", e => { 
     e.preventDefault();
-    /* Phoenix will unload the socket if it sees beforeunload. */
-    e.stopImmediatePropagation();
     return e.returnValue = "Are you sure you want to leave?";
 });
 
@@ -109,7 +107,9 @@ Hooks.Timer = {
     }
 };
 
-let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks });
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: {_csrf_token: csrfToken} });
 liveSocket.connect();
 
 function selectRadio(eid) {
