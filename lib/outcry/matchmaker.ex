@@ -22,6 +22,8 @@ defmodule Outcry.Matchmaker do
   end
 
   defp matchmake(group) when length(group) == @required_users do
+    # TODO: what if user is logged in on multiple devices?
+    # Then there will be multiple PIDs listed.
     pids = Enum.map(group, fn {_uid, %{metas: [%{pid: pid}]}} -> pid end)
     {:ok, _} = Outcry.GameSupervisor.start_child(%{players: pids})
   end

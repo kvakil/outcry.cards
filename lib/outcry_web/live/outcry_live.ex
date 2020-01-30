@@ -1,12 +1,17 @@
 defmodule OutcryWeb.OutcryLive do
   use Phoenix.{LiveView, HTML}
   alias OutcryWeb.MatchmakingPresence
+  use OutcryWeb.LiveAuth, otp_app: :outcry
 
   @impl true
-  def mount(%{}, _params, socket) do
+  def mount(%{}, session, socket) do
+    user_id = case get_user_id(session) do
+      {:ok, user_id} -> "user:#{user_id}"
+      :error -> "anon:#{Ecto.UUID.generate()}"
+    end
     {:ok,
      socket
-     |> assign(user_id: inspect(self()), status: :in_queue),
+     |> assign(user_id: user_id, status: :in_queue),
      temporary_assigns: [trade_message: nil]}
   end
 

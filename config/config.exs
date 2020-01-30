@@ -37,4 +37,5 @@ config :outcry, :pow,
   extensions: [PowResetPassword, PowEmailConfirmation],
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
   mailer_backend: OutcryWeb.PowMailer,
-  web_mailer_module: OutcryWeb
+  web_mailer_module: OutcryWeb,
+  cache_store_backend: Pow.Store.Backend.EtsCache
