@@ -44,7 +44,8 @@ defmodule Outcry.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:ex_rated, "~> 1.2"}
+      {:ex_rated, "~> 1.2"},
+      {:pow, "~> 1.0.16"}
     ]
   end
 

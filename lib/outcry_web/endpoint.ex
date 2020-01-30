@@ -42,6 +42,8 @@ defmodule OutcryWeb.Endpoint do
     key: "_outcry_key",
     signing_salt: "MfuUrOvk"
 
+  plug Pow.Plug.Session, otp_app: :outcry
+
   plug OutcryWeb.Router
 
   socket "/live", Phoenix.LiveView.Socket

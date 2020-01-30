@@ -29,3 +29,12 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+config :outcry, :pow,
+  user: Outcry.Users.User,
+  repo: Outcry.Repo,
+  web_module: OutcryWeb,
+  extensions: [PowResetPassword, PowEmailConfirmation],
+  controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
+  mailer_backend: OutcryWeb.PowMailer,
+  web_mailer_module: OutcryWeb

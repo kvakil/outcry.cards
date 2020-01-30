@@ -64,6 +64,15 @@ defmodule OutcryWeb do
     end
   end
 
+  def mailer_view do
+    quote do
+      use Phoenix.View, root: "lib/outcry_web/templates",
+                        namespace: OutcryWeb
+
+      use Phoenix.HTML
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
