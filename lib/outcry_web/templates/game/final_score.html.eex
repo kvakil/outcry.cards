@@ -39,16 +39,16 @@
       <% end %></th>
     <% end %>
   </tr>
-  <%= for {human, point} <- Enum.zip(
+  <%= for {row_name, point_type} <- Enum.zip(
         ~w(Trade Goal Bonus Final),
         ~w(wealth_points goal_points winners_points final_scores)a
       ) do %>
   <tr>
-    <th scope="row"><%= human %></th>
-    <%= for {pid, player} <- @players do %>
+    <th scope="row"><%= row_name %></th>
+    <%= for {pid, _player} <- @players do %>
     <% maybe_winner = if(pid in winners, do: "is-selected", else: "") %>
     <td class="<%= maybe_winner %>">
-      <%= round(@score_info[point][pid] || 0) %>
+      <%= round(@score_info[point_type][pid] || 0) %>
     </td>
     <% end %>
   </tr>
