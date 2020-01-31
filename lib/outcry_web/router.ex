@@ -22,12 +22,16 @@ defmodule OutcryWeb.Router do
       error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
+  pipeline :pow_layout do
+    plug :put_layout, {OutcryWeb.LayoutView, :pow}
+  end
+
   pipeline :game_layout do
     plug :put_layout, {OutcryWeb.LayoutView, :game}
   end
 
   scope "/" do
-    pipe_through :browser
+    pipe_through [:browser, :pow_layout]
 
     pow_routes()
     pow_extension_routes()

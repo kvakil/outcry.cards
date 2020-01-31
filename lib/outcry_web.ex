@@ -40,6 +40,8 @@ defmodule OutcryWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
+      alias OutcryWeb.BulmaForm
+
       import OutcryWeb.ErrorHelpers
       import OutcryWeb.Gettext
       alias OutcryWeb.Router.Helpers, as: Routes

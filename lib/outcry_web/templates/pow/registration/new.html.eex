@@ -1,28 +1,29 @@
-<h1>Register</h1>
+<h2 class="title is-2">Register</h2>
 
 <%= form_for @changeset, @action, [as: :user], fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-  <% end %>
+  <%= BulmaForm.flash_if_error(@changeset) %>
 
-  <%= label f, Pow.Ecto.Schema.user_id_field(@changeset) %>
-  <%= text_input f, Pow.Ecto.Schema.user_id_field(@changeset) %>
-  <%= error_tag f, Pow.Ecto.Schema.user_id_field(@changeset) %>
-
-  <%= label f, :password %>
-  <%= password_input f, :password %>
-  <%= error_tag f, :password %>
-
-  <%= label f, :confirm_password %>
-  <%= password_input f, :confirm_password %>
-  <%= error_tag f, :confirm_password %>
-
-  <div>
-    <%= submit "Register" %>
+  <div class="field">
+    <%= BulmaForm.label f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+    <%= BulmaForm.text_input f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+    <%= error_tag f, Pow.Ecto.Schema.user_id_field(@changeset) %>
   </div>
+
+  <div class="field">
+    <%= BulmaForm.label f, :password %>
+    <%= BulmaForm.password_input f, :password %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <div class="field">
+    <%= BulmaForm.label f, :confirm_password %>
+    <%= BulmaForm.password_input f, :confirm_password %>
+    <%= error_tag f, :confirm_password %>
+  </div>
+
+  <%= BulmaForm.submit "Register", [class: "is-link"] %>
 <% end %>
 
-
-<span><%= link "Sign in", to: Routes.pow_session_path(@conn, :new) %></span>
+<div class="content has-text-centered margin-top">
+  <p>Already have an account? <%= link "Sign in", to: Routes.pow_session_path(@conn, :new) %></p>
+</div>
