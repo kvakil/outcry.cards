@@ -6,7 +6,7 @@ defmodule Outcry.Users.User do
     extensions: [PowResetPassword, PowEmailConfirmation]
 
   schema "users" do
-    field :rating, :float, default: 0
+    field :rating, :float, default: 0.0
     pow_user_fields()
     timestamps()
   end
