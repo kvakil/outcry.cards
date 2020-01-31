@@ -54,7 +54,7 @@ defmodule Outcry.Rater do
 
     ratings |> Enum.each(fn {user_id, rating} ->
       with "user:" <> user_id <- user_id,
-           user <- Repo.one!(from u in User, where: u.id == ^user_id)
+           user <- Repo.one!(from u in User, where: u.id == ^user_id),
            {:ok, _} <- User.update_rating(user, rating) do
         nil
       end
