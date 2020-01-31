@@ -11,17 +11,20 @@ defmodule Outcry.Game.Types do
   defmodule EnumType do
     defmacro __using__(valid) do
       quote do
+        @all unquote(valid)
+
         def type, do: :string
 
         def cast(e) when is_binary(e) do
-          # XXX: we might be tempted to implement the is_binary case
-          # in terms of the is_atom case below. This way ensures we do
-          # not allocate more atoms, to prevent denial-of-service.
-          valid_strings = unquote(Macro.escape(Map.new(valid, &{Atom.to_string(&1), &1})))
+          # XXX: we might be tempted to implement the is_binary case in
+          # terms of the is_atom case below. However this way ensures
+          # that we do not allocate more atoms, preventing
+          # denial-of-service.
+          valid_strings = Map.new(@all, &{Atom.to_string(&1), &1})
 
           case Map.fetch(valid_strings, e) do
             :error ->
-              error_message = unquote("is not one of #{Enum.join(valid, ", ")}.")
+              error_message = "is not one of #{Enum.join(@all, ", ")}."
               {:error, message: error_message}
 
             ok ->
@@ -48,7 +51,7 @@ defmodule Outcry.Game.Types do
     def opposite_suit(:k), do: :j
     def opposite_suit(:l), do: :h
 
-    def all_suits, do: [:h, :j, :k, :l]
+    def all_suits, do: @all
   end
 
   defmodule Direction do
@@ -64,7 +67,7 @@ defmodule Outcry.Game.Types do
     def direction_to_int(:buy), do: @buy_direction
     def direction_to_int(:sell), do: @sell_direction
 
-    def all_directions, do: [:buy, :sell]
+    def all_directions, do: @all
   end
 
   defmodule Price do

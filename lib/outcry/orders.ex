@@ -5,10 +5,12 @@ defmodule Outcry.Game.Orders do
       quote do
         import Ecto.Changeset
 
-        defstruct Keyword.keys(unquote(schema))
+        @schema unquote(schema)
+
+        defstruct Keyword.keys(@schema)
 
         defp validate(changeset) do
-          changeset |> validate_required(Keyword.keys(unquote(schema)))
+          changeset |> validate_required(Keyword.keys(@schema))
         end
 
         defoverridable validate: 1
@@ -21,10 +23,10 @@ defmodule Outcry.Game.Orders do
         end
 
         defp cast(params) do
-          schema_keys = Keyword.keys(unquote(schema))
+          schema_keys = Keyword.keys(@schema)
 
           Ecto.Changeset.cast(
-            {struct(__MODULE__), Map.new(unquote(schema))},
+            {struct(__MODULE__), Map.new(@schema)},
             Map.from_struct(params),
             schema_keys
           )

@@ -52,7 +52,7 @@ defmodule Outcry.Game do
   @initial_wealth 0
 
   @impl true
-  def handle_continue(%{event: "start_game", players: players}, state) do
+  def handle_continue(%{event: "start_game", pid_to_player_id: pid_to_player_id}, state) do
     card_distribution = Map.new(Enum.zip(Suit.all_suits(), Enum.shuffle(@distribution)))
 
     {common_suit, 12} = Enum.max_by(card_distribution, fn {_suit, count} -> count end)
@@ -62,14 +62,25 @@ defmodule Outcry.Game do
       Enum.flat_map(card_distribution, fn {suit, count} -> List.duplicate(suit, count) end)
       |> Enum.shuffle()
 
+    # Ensure that even if a suit does not appear in our hand, we still
+    # have it as a key (with value 0).
+    initial_counts = Map.new(Suit.all_suits(), &{&1, 0})
+
+    count_suits = fn hand ->
+      Map.merge(initial_counts, Enum.frequencies(hand))
+    end
+
+    pids = Map.keys(pid_to_player_id)
+
     hands =
       shuffled_deck
       |> Enum.chunk_every(10)
-      |> Enum.map(&Enum.frequencies/1)
-      |> (&Enum.zip(players, &1)).()
+      |> Enum.map(count_suits)
+      |> (&Enum.zip(pids, &1)).()
       |> Map.new()
 
-    handle_continue(%{event: "start_game", hands: hands, goal_suit: goal_suit}, state)
+    {:noreply, state |> Map.put(:pid_to_player_id, pid_to_player_id),
+     {:continue, %{event: "start_game", hands: hands, goal_suit: goal_suit}}}
   end
 
   @impl true
@@ -301,17 +312,18 @@ defmodule Outcry.Game do
   defp end_game(state) do
     score_info = score(state)
     broadcast_to_players(&Player.game_over(&1, score_info), state)
-    state |> Map.put(:score_info, score_info)
+    score_info
   end
 
   @impl true
   def handle_info(:end_game, state) do
-    final_state = end_game(state)
-    {:stop, :normal, final_state}
-  end
+    score_info = end_game(state)
 
-  @impl true
-  def terminate(_, _state) do
-    # TODO: log result to database
+    with {:ok, pid_to_player_id} <- Map.fetch(state, :pid_to_player_id),
+         :ok <-
+           Outcry.Rater.rate_game(%{score_info: score_info, pid_to_player_id: pid_to_player_id}) do
+    end
+
+    {:stop, :normal, state}
   end
 end

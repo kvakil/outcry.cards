@@ -8,7 +8,7 @@ defmodule OutcryWeb.OutcryLive do
     user_id = case get_user_id(session) do
       {:ok, user_id} -> "user:#{user_id}"
       :error -> "anon:#{Ecto.UUID.generate()}"
-    end
+    end |> IO.inspect(label: "user_id")
     {:ok,
      socket
      |> assign(user_id: user_id, status: :in_queue),
@@ -89,35 +89,25 @@ defmodule OutcryWeb.OutcryLive do
     end)
   end
 
-  defp order_to_struct(order) do
+  defp get_order_type(order) do
     alias Outcry.Game.Orders.{Limit, Market, Cancel}
 
     case Map.get(order, "type") do
-      "limit" -> Limit
-      "market" -> Market
-      "cancel" -> Cancel
-      _ -> :error
-    end
-    |> case do
-      :error ->
-        error_for("order_type", "invalid order type.")
-
-      m ->
-        {:ok, to_struct(m, order)}
+      "limit" -> {:ok, Limit}
+      "market" -> {:ok, Market}
+      "cancel" -> {:ok, Cancel}
+      _ -> error_for("order_type", "invalid order type.")
     end
   end
 
   @impl true
   def handle_event("order", %{"order" => order}, socket) do
     with {:ok, _} <- rate_limit(socket),
-         {:ok, order} <- order_to_struct(order),
+         {:ok, order_type} <- get_order_type(order),
+         order <- to_struct(order_type, order),
          :ok <- Outcry.Game.Player.place_order(self(), socket.assigns.game_pid, order) do
-      :ok
-    end
-    |> case do
-      :ok ->
-        {:noreply, socket |> assign(errors: nil)}
-
+      {:noreply, socket |> assign(errors: nil)}
+    else
       {:error, error_messages} ->
         {:noreply, socket |> assign(errors: error_messages)}
     end

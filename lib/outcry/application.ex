@@ -12,7 +12,8 @@ defmodule Outcry.Application do
       OutcryWeb.Endpoint,
       OutcryWeb.MatchmakingPresence,
       Outcry.Matchmaker,
-      Outcry.GameSupervisor
+      Outcry.GameSupervisor,
+      Outcry.Rater
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

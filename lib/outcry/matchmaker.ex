@@ -22,10 +22,17 @@ defmodule Outcry.Matchmaker do
   end
 
   defp matchmake(group) when length(group) == @required_users do
-    # TODO: what if user is logged in on multiple devices?
-    # Then there will be multiple PIDs listed.
-    pids = Enum.map(group, fn {_uid, %{metas: [%{pid: pid}]}} -> pid end)
-    {:ok, _} = Outcry.GameSupervisor.start_child(%{players: pids})
+    # TODO: what if user is logged in on multiple devices / has multiple
+    # tabs open? Then there will be multiple PIDs below.
+    # Right now, we just ignore them and only match the first one--but
+    # this may lead to users being in multiple games if matchmaking
+    # occurs multiple times. We need a better solution.
+    pid_to_player_id =
+      Map.new(group, fn {player_id, %{metas: [%{pid: pid} | _]}} ->
+        {pid, player_id}
+      end)
+
+    {:ok, _} = Outcry.GameSupervisor.start_child(%{pid_to_player_id: pid_to_player_id})
   end
 
   @impl true

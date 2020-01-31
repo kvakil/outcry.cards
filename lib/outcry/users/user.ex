@@ -6,8 +6,8 @@ defmodule Outcry.Users.User do
     extensions: [PowResetPassword, PowEmailConfirmation]
 
   schema "users" do
+    field :rating, :float, default: 0
     pow_user_fields()
-
     timestamps()
   end
 
@@ -15,5 +15,17 @@ defmodule Outcry.Users.User do
     user_or_changeset
     |> pow_changeset(attrs)
     |> pow_extension_changeset(attrs)
+  end
+
+  defp changeset_rating(user_or_changeset, attrs) do
+    user_or_changeset
+    |> Ecto.Changeset.cast(attrs, [:rating])
+  end
+
+  def update_rating(user, new_rating) do
+    alias Outcry.Repo
+    user
+    |> changeset_rating(%{rating: new_rating})
+    |> Repo.update()
   end
 end
