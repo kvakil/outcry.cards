@@ -11,13 +11,21 @@
   </div>
 </section>
 <section class="section">
-  <div class="container has-text-centered">
+  <p class="notification is-info" role="alert"><%= get_flash(@conn, :info) %></p>
+  <p class="notification is-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+  <div class="has-text-centered margin-bottom">
     <button class="button is-link is-large" onclick="window.location = '/play';">
-      Play Now
+      <%= if Pow.Plug.current_user(@conn) do %>
+        Play
+      <% else %>
+        Play as Guest
+      <% end %>
     </button>
+    <noscript>Requires Javascript to play!</noscript>
   </div>
   <div class="container content">
-    <h2>Rules</h2>
+    <h2 id="rules">Rules</h2>
 
     <p>Outcry is played with a deck of 40 cards and four players.
     There are four suits (<tt>h</tt>, <tt>j</tt>, <tt>k</tt>, and <tt>l</tt>).
@@ -32,6 +40,7 @@
     and the suits <tt>j</tt> and <tt>k</tt> are opposites.
     The goal of the game is to collect as many cards of the goal suit as you can,
     all other suits will end up worthless!
+    While nobody knows which card the goal suit is, players may have guesses based on their own hand.
     </p>
 
     <article class="message is-warning">
@@ -49,15 +58,14 @@
     <p>
     At the start of the game, each player puts 50 points into the pot and receives 10 cards.
     Afterwards, players begin trading cards.
-    Players buy and sell cards in exchange for points.
-    While nobody knows which card the goal suit is, players may have guesses based on their own hand.
+    Players offer to buy and sell cards in exchange for points.
     </p>
 
     <blockquote>
       <p><strong>Player Q:</strong> Selling <tt>h</tt> for 8 points.
       <p><strong>Player W:</strong> OK, I'll buy an <tt>h</tt> for 8.
 
-      <p>[Player Q gives a single <tt>h</tt> to Player W, and
+      <p>[Player Q gives a <em>single</em> <tt>h</tt> to Player W, and
       Player W gives 8 points to Player Q.]</p>
     </blockquote>
 
@@ -76,7 +84,7 @@
     Each player gets 10 points for each goal suit card they have collected.
     All other cards are worthless.
     The player with the plurality of goal suit cards receives the rest of the pot (either 100 or 120 points)
-    as the <i>majority bonus</i>.
+    as the <em>majority bonus</em>.
     (If there is a tie, the bonus is split between the tied players.)
     This bonus is quite substantial, so players are encouraged to attempt to
     collect majorities.
@@ -136,7 +144,8 @@
                 </tbody></table>
                 <div class="content">
                   <p>This shows how many points each player currently has from trading.
-                  The <tt>(*)</tt> indicates your player: here you are player <tt>Q</tt>.</p>
+                  The <tt>(*)</tt> indicates your player: here you are player <tt>Q</tt>.
+                  (Player names are assigned randomly at the start.)</p>
                 </div>
           </div>
 

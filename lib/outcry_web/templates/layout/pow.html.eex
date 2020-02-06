@@ -9,11 +9,14 @@
     <link rel="preload" src="<%= Routes.static_path(@conn, "/js/app.js") %>" as="script"></link>
   </head>
   <body>
+    <%= render "navbar.html", assigns %>
     <section class="section">
       <main role="main" class="container">
         <div class="columns">
           <div class="column is-3"></div>
           <div class="column is-6">
+            <p class="notification is-info" role="alert"><%= get_flash(@conn, :info) %></p>
+            <p class="notification is-danger" role="alert"><%= get_flash(@conn, :error) %></p>
             <%= render @view_module, @view_template, assigns %>
           </div>
           <div class="column is-3"></div>

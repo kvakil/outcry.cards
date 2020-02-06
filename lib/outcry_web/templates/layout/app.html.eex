@@ -9,6 +9,7 @@
     <link rel="preload" src="<%= Routes.static_path(@conn, "/js/app.js") %>" as="script"></link>
   </head>
   <body>
+    <%= render "navbar.html", assigns %>
     <%= render @view_module, @view_template, assigns %>
   </body>
 </html>

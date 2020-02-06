@@ -1,0 +1,38 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      Outcry
+    </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/#rules">
+        Rules
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <%= if Pow.Plug.current_user(@conn) do %>
+            <%= link "Play", to: "/play", class: "button is-info" %>
+            <%= form_for @conn, Routes.pow_session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+              <%= BulmaForm.submit "Logout", class: "is-light" %>
+            <% end %>
+          <% else %>
+            <%= link "Play as Guest", to: "/play", class: "button is-info" %>
+            <%= link "Register", to: Routes.pow_registration_path(@conn, :new), class: "button is-light" %>
+            <%= link "Sign in", to: Routes.pow_session_path(@conn, :new), class: "button is-light" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
