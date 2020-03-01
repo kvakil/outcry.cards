@@ -14,14 +14,33 @@
   <p class="notification is-info" role="alert"><%= get_flash(@conn, :info) %></p>
   <p class="notification is-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-  <div class="has-text-centered margin-bottom">
+  <div class="has-text-centered">
+    <%= if Pow.Plug.current_user(@conn) do %>
     <button class="button is-link is-large" onclick="window.location = '/play';">
-      <%= if Pow.Plug.current_user(@conn) do %>
-        Play
-      <% else %>
-        Play as Guest
-      <% end %>
+      Play
     </button>
+    <% else %>
+    <div class="columns is-centered">
+      <div class="column is-3"></div>
+      <div class="column is-6 has-text-centered buttons">
+        <%= link "Register", to: Routes.pow_registration_path(@conn, :new), class: "button is-link is-large" %>
+        <div class="button is-large" style="border: none; pointer-events: none">or</div>
+        <button class="button is-light is-large" onclick="window.location = '/play';">
+          Play as Guest
+        </button>
+      </div>
+      <div class="column is-3"></div>
+    </div>
+    <div class="columns">
+      <div class="column is-3"></div>
+      <div class="column is-6 has-text-centered">
+        <div class="is-size-7">
+          Registration tracks your rating and matches you with people of similar skill levels!
+        </div>
+      </div>
+      <div class="column is-3"></div>
+    </div>
+    <% end %>
     <noscript>Requires Javascript to play!</noscript>
   </div>
   <div class="container content">
@@ -109,6 +128,7 @@
     <p>Here is what the game interface looks like, decomposed item-by-item:</p>
   </div>
 
+  <!-- BEGIN GAME INTERFACE -->
   <div class="container">
     <div class="tile is-ancestor">
       <div class="tile is-parent is-vertical">
@@ -303,7 +323,7 @@
                 <div class="field-label is-normal"></div>
                 <div class="field-body">
                   <div class="control">
-                    <button class="button is-link" id="order_submit" type="submit">Submit (Enter)</button>      </div>
+                    <button class="button is-link" id="order_submit" type="submit" onclick="return false">Submit (Enter)</button>      </div>
                 </div>
               </div>
             </form>
@@ -349,9 +369,11 @@
         </div>
       </div>
     </div>
+  <!-- END GAME INTERFACE -->
     <div class="content">
       <p>Putting it all together, we get:</p>
     </div>
+  <!-- BEGIN GAME INTERFACE -->
     <div class="container">
       <div class="tile is-ancestor">
         <div class="tile is-parent is-vertical">
@@ -522,7 +544,7 @@
                   <div class="field-label is-normal"></div>
                   <div class="field-body">
                     <div class="control">
-                      <button class="button is-link" id="order_submit" type="submit">Submit (Enter)</button>      </div>
+                      <button class="button is-link" id="order_submit" type="submit" onclick="return false">Submit (Enter)</button>      </div>
                   </div>
                 </div>
               </form>
@@ -537,5 +559,6 @@
         </div>
       </div>
     </div>
+  <!-- END GAME INTERFACE -->
   </div>
 </section>

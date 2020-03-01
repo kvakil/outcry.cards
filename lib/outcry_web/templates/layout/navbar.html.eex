@@ -27,8 +27,8 @@
               <%= BulmaForm.submit "Logout", class: "is-light" %>
             <% end %>
           <% else %>
-            <%= link "Play as Guest", to: "/play", class: "button is-info" %>
-            <%= link "Register", to: Routes.pow_registration_path(@conn, :new), class: "button is-light" %>
+            <%= link "Play as Guest", to: "/play", class: "button is-light" %>
+            <%= link "Register", to: Routes.pow_registration_path(@conn, :new), class: "button is-link" %>
             <%= link "Sign in", to: Routes.pow_session_path(@conn, :new), class: "button is-light" %>
           <% end %>
         </div>
