@@ -166,7 +166,7 @@ defmodule Outcry.Game do
   def place_order(server, player, order) do
     case order.__struct__.changeset(order) do
       {:ok, order} ->
-        GenServer.cast(server, %{
+        GenServer.call(server, %{
           player: player,
           order: order
         })
@@ -232,20 +232,22 @@ defmodule Outcry.Game do
   end
 
   @impl true
-  def handle_cast(
+  def handle_call(
         %{player: player, order: %Orders.Cancel{suit: suit, direction: direction}},
+        _from,
         state
       ) do
     new_state =
       update_in(state.order_books[suit][direction], &cancel_conflicting_orders(&1, player))
 
-    {:noreply, new_state, @and_then_broadcast_state}
+    {:reply, :ok, new_state, @and_then_broadcast_state}
   end
 
   @impl true
-  def handle_cast(%{player: player, order: order}, state) do
+  def handle_call(%{player: player, order: order}, _from, state) do
     if short_sell?(state, player, order) do
-      {:noreply, state}
+      # TODO: reply with error
+      {:reply, :ok, state}
     else
       case try_order(state, player, order) do
         :nocross ->
@@ -253,21 +255,22 @@ defmodule Outcry.Game do
             # Only limit orders can be added to the book.
             Orders.Limit ->
               new_state = add_to_order_book(state, player, order)
-              {:noreply, new_state, @and_then_broadcast_state}
+              {:reply, :ok, new_state, @and_then_broadcast_state}
 
             _ ->
-              {:noreply, state}
+              {:reply, :ok, state}
           end
 
         {:cross, trade} ->
           new_state = execute_trade(state, order, trade)
 
-          {:noreply, new_state,
+          {:reply, :ok, new_state,
            {:continue,
             {:broadcast_trade, %{trade_id: state.trade_id, trade: trade, order: order}}}}
 
         :selftrade ->
-          {:noreply, state}
+          # TODO: reply with error
+          {:reply, :ok, state}
       end
     end
   end
