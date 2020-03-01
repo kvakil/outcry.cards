@@ -66,7 +66,7 @@ defmodule Outcry.GameTest do
     end)
   end
 
-  @extra_wait_time 100
+  @extra_wait_time 50
 
   defmacro assert_player_state(player, state) do
     quote do
