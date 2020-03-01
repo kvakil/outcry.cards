@@ -163,6 +163,15 @@ defmodule Outcry.Game do
     try_order(state, player, fake_order)
   end
 
+  defp humanize_changeset_errors(errors) do
+    alias Phoenix.HTML.Form
+
+    errors
+    |> Enum.map(fn {field, {error_message, _}} ->
+      "#{Form.humanize(field)} #{error_message}."
+    end)
+  end
+
   def place_order(server, player, order) do
     case order.__struct__.changeset(order) do
       {:ok, order} ->
@@ -172,7 +181,7 @@ defmodule Outcry.Game do
         })
 
       {:error, %{errors: errors}} ->
-        {:error, errors}
+        {:error, humanize_changeset_errors(errors)}
     end
   end
 

@@ -70,10 +70,10 @@ defmodule Outcry.Game.TypesTest do
 
   test "bad prices denied" do
     import Price
-    assert {:error, message: "must be between 0 and 200."} = cast(-5)
-    assert {:error, message: "must be between 0 and 200."} = cast(1000)
-    assert {:error, message: "is not a number."} = cast("foo")
-    assert {:error, message: "is not a number."} = cast("")
+    assert {:error, message: "must be between 0 and 200"} = cast(-5)
+    assert {:error, message: "must be between 0 and 200"} = cast(1000)
+    assert {:error, message: "is not a number"} = cast("foo")
+    assert {:error, message: "is not a number"} = cast("")
   end
 
   test "floating points rounded off" do

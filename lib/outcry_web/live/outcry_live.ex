@@ -66,14 +66,10 @@ defmodule OutcryWeb.OutcryLive do
     end)
   end
 
-  defp error_for(element, message) do
-    {:error, [{element, {message, []}}]}
-  end
-
   @trades_per_second 4
   defp rate_limit(socket) do
     case ExRated.check_rate(socket.assigns.user_id, 1_000, @trades_per_second) do
-      {:error, _} -> error_for("submit", "trading too fast, wait one second.")
+      {:error, _} -> {:error, ["Trading too fast, wait one second."]}
       {:ok, _} = ok -> ok
     end
   end
@@ -96,7 +92,7 @@ defmodule OutcryWeb.OutcryLive do
       "limit" -> {:ok, Limit}
       "market" -> {:ok, Market}
       "cancel" -> {:ok, Cancel}
-      _ -> error_for("order_type", "invalid order type.")
+      _ -> {:error, ["Invalid order type."]}
     end
   end
 

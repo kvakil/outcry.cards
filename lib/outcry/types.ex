@@ -24,7 +24,7 @@ defmodule Outcry.Game.Types do
 
           case Map.fetch(valid_strings, e) do
             :error ->
-              error_message = "is not one of #{Enum.join(@all, ", ")}."
+              error_message = "is not one of #{Enum.join(@all, ", ")}"
               {:error, message: error_message}
 
             ok ->
@@ -78,7 +78,7 @@ defmodule Outcry.Game.Types do
     def cast(price) when is_binary(price) do
       case Integer.parse(price) do
         {price, _} -> cast(price)
-        :error -> {:error, message: "is not a number."}
+        :error -> {:error, message: "is not a number"}
       end
     end
 
@@ -86,7 +86,7 @@ defmodule Outcry.Game.Types do
       if 0 <= price and price <= 200 do
         {:ok, price}
       else
-        {:error, message: "must be between 0 and 200."}
+        {:error, message: "must be between 0 and 200"}
       end
     end
 

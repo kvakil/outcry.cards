@@ -247,7 +247,7 @@ defmodule Outcry.GameTest do
     Enum.each(
       [%Limit{}, %Market{}, %Cancel{}, too_large_order, too_small_order],
       fn bad_order ->
-        assert {:error, _} = Player.place_order(player_h, game, bad_order)
+        assert {:error, _} = Player.place_order(player_h, game, bad_order) |> IO.inspect
       end
     )
   end
