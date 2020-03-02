@@ -107,9 +107,9 @@ Hooks.Timer = {
     }
 };
 
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
-let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: {_csrf_token: csrfToken} });
+const liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: {_csrf_token: csrfToken} });
 liveSocket.connect();
 
 function selectRadio(eid) {
@@ -173,11 +173,19 @@ function isTypingPrice(e) {
     return el && el.id == "order_price" && e.code.startsWith("Digit");
 }
 
+function closeModalIfOpen() {
+    const el = document.getElementById("modal_close");
+    if (el) {
+        el.click();
+    }
+}
+
 document.addEventListener("keydown", e => {
-    if (isTypingPrice(e)) {
+    if (e.ctrlKey || e.altKey) {
         return false;
     }
-    if (e.ctrlKey || e.altKey) {
+    closeModalIfOpen();
+    if (isTypingPrice(e)) {
         return false;
     }
     const code = e.code;

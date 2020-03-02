@@ -1,0 +1,27 @@
+<%= if @errors != [] do %>
+<div id="modal" class="modal is-active">
+  <div class="modal-background" phx-click="clear_errors"></div>
+  <div class="modal-content">
+    <article class="message is-danger">
+      <div class="message-header">
+        <p>Order Error</p>
+        <button id="modal_close" class="delete" aria-label="delete" phx-click="clear_errors"></button>
+      </div>
+      <div class="message-body content">
+        <%= case @errors do %>
+        <%    [single_error] -> %>
+              <p><%= single_error %></p>
+        <%    multiple_errors -> %>
+          <p>Multiple errors occurred:</p>
+          <ul>
+            <%= for error <- @multiple_errors do %>
+            <li><%= error %></li>
+            <% end %>
+          </ul>
+        <% end %>
+        <p><em>Press any key to close.</em></p>
+      </div>
+    </article>
+  </div>
+</div>
+<% end %>

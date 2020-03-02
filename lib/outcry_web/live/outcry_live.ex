@@ -8,10 +8,10 @@ defmodule OutcryWeb.OutcryLive do
     user_id = case get_user_id(session) do
       {:ok, user_id} -> "user:#{user_id}"
       :error -> "anon:#{Ecto.UUID.generate()}"
-    end |> IO.inspect(label: "user_id")
+    end
     {:ok,
      socket
-     |> assign(user_id: user_id, status: :in_queue),
+     |> assign(user_id: user_id, status: :in_queue, errors: []),
      temporary_assigns: [trade_message: nil]}
   end
 
@@ -102,7 +102,7 @@ defmodule OutcryWeb.OutcryLive do
          {:ok, order_type} <- get_order_type(order),
          order <- to_struct(order_type, order),
          :ok <- Outcry.Game.Player.place_order(self(), socket.assigns.game_pid, order) do
-      {:noreply, socket |> assign(errors: nil)}
+      {:noreply, socket |> assign(errors: [])}
     else
       {:error, error_messages} ->
         {:noreply, socket |> assign(errors: error_messages)}
@@ -116,11 +116,17 @@ defmodule OutcryWeb.OutcryLive do
   end
 
   @impl true
+  def handle_event("clear_errors", _params, socket) do
+    {:noreply, socket |> assign(errors: [])}
+  end
+
+  @impl true
   def render(assigns) do
     ~L"""
     <%= case @status do %>
       <% :in_queue -> %> <h1 class="title is-1">Looking for game...</h1>
       <% :game_started -> %>
+      <%= Phoenix.View.render(OutcryWeb.GameView, "error.html", assigns) %>
       <div class="tile is-ancestor">
         <div class="tile is-parent is-vertical">
           <div class="tile is-parent">

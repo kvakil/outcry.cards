@@ -141,7 +141,6 @@ defmodule Outcry.Game do
 
         if (other_price - price) * other_direction_int >= 0 do
           if player == other_player do
-            # TODO: maybe recurse and check next order?
             :selftrade
           else
             sides = %{direction => player, other_direction => other_player}
@@ -255,8 +254,7 @@ defmodule Outcry.Game do
   @impl true
   def handle_call(%{player: player, order: order}, _from, state) do
     if short_sell?(state, player, order) do
-      # TODO: reply with error
-      {:reply, :ok, state}
+      {:reply, {:error, ["You can't sell a suit you don't have."]}, state}
     else
       case try_order(state, player, order) do
         :nocross ->
@@ -278,8 +276,7 @@ defmodule Outcry.Game do
             {:broadcast_trade, %{trade_id: state.trade_id, trade: trade, order: order}}}}
 
         :selftrade ->
-          # TODO: reply with error
-          {:reply, :ok, state}
+          {:reply, {:error, ["Cannot trade with yourself."]}, state}
       end
     end
   end
