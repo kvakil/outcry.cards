@@ -1,7 +1,6 @@
 defmodule Outcry.Game.Orders do
   defmodule VirtualChangeset do
     defmacro __using__(schema) do
-      # TODO: how to ensure schema is only evaluated once
       quote do
         import Ecto.Changeset
 

@@ -1,3 +1,77 @@
+defmodule Outcry.MatchmakingPresence do
+  @moduledoc """
+  Provides presence tracking to channels and processes.
+
+  See the [`Phoenix.Presence`](http://hexdocs.pm/phoenix/Phoenix.Presence.html)
+  docs for more details.
+
+  ## Usage
+
+  Presences can be tracked in your channel after joining:
+
+      defmodule Outcry.MyChannel do
+        use OutcryWeb, :channel
+        alias OutcryWeb.Presence
+
+        def join("some:topic", _params, socket) do
+          send(self(), :after_join)
+          {:ok, assign(socket, :user_id, ...)}
+        end
+
+        def handle_info(:after_join, socket) do
+          push(socket, "presence_state", Presence.list(socket))
+          {:ok, _} = Presence.track(socket, socket.assigns.user_id, %{
+            online_at: inspect(System.system_time(:second))
+          })
+          {:noreply, socket}
+        end
+      end
+
+  In the example above, `Presence.track` is used to register this
+  channel's process as a presence for the socket's user ID, with
+  a map of metadata. Next, the current presence list for
+  the socket's topic is pushed to the client as a `"presence_state"` event.
+
+  Finally, a diff of presence join and leave events will be sent to the
+  client as they happen in real-time with the "presence_diff" event.
+  See `Phoenix.Presence.list/2` for details on the presence data structure.
+
+  ## Fetching Presence Information
+
+  The `fetch/2` callback is triggered when using `list/1`
+  and serves as a mechanism to fetch presence information a single time,
+  before broadcasting the information to all channel subscribers.
+  This prevents N query problems and gives you a single place to group
+  isolated data fetching to extend presence metadata.
+
+  The function receives a topic and map of presences and must return a
+  map of data matching the Presence data structure:
+
+      %{"123" => %{metas: [%{status: "away", phx_ref: ...}],
+        "456" => %{metas: [%{status: "online", phx_ref: ...}]}
+
+  The `:metas` key must be kept, but you can extend the map of information
+  to include any additional information. For example:
+
+      def fetch(_topic, entries) do
+        users = entries |> Map.keys() |> Accounts.get_users_map(entries)
+        # => %{"123" => %{name: "User 123"}, "456" => %{name: nil}}
+
+        for {key, %{metas: metas}} <- entries, into: %{} do
+          {key, %{metas: metas, user: users[key]}}
+        end
+      end
+
+  The function above fetches all users from the database who
+  have registered presences for the given topic. The fetched
+  information is then extended with a `:user` key of the user's
+  information, while maintaining the required `:metas` field from the
+  original presence data.
+  """
+  use Phoenix.Presence, otp_app: :outcry,
+                        pubsub_server: Outcry.PubSub
+end
+
 defmodule Outcry.Matchmaker do
   use GenServer
 
@@ -5,7 +79,7 @@ defmodule Outcry.Matchmaker do
   @matchmake_interval 500
   @required_users 4
 
-  def channel, do: "lobby"
+  @channel "lobby"
 
   def start_link(@nostate) do
     GenServer.start_link(__MODULE__, @nostate)
@@ -17,18 +91,28 @@ defmodule Outcry.Matchmaker do
     {:ok, @nostate}
   end
 
+  def join_matchmaking(pid, user_id) do
+    case Outcry.MatchmakingPresence.get_by_key(@channel, user_id) do
+      %{metas: [%{pid: other_pid}]} ->
+        leave_matchmaking(other_pid, user_id)
+        send(other_pid, :kick_out)
+
+      [] -> :ok
+    end
+    Outcry.MatchmakingPresence.track(pid, @channel, user_id, %{pid: self()})
+  end
+
+  def leave_matchmaking(pid, user_id) do
+    Outcry.MatchmakingPresence.untrack(pid, @channel, user_id)
+  end
+
   defp schedule_matchmake do
     Process.send_after(self(), :matchmake, @matchmake_interval)
   end
 
   defp matchmake(group) when length(group) == @required_users do
-    # TODO: what if user is logged in on multiple devices / has multiple
-    # tabs open? Then there will be multiple PIDs below.
-    # Right now, we just ignore them and only match the first one--but
-    # this may lead to users being in multiple games if matchmaking
-    # occurs multiple times. We need a better solution.
     pid_to_player_id =
-      Map.new(group, fn {player_id, %{metas: [%{pid: pid} | _]}} ->
+      Map.new(group, fn {player_id, %{metas: [%{pid: pid}]}} ->
         {pid, player_id}
       end)
 
@@ -37,7 +121,7 @@ defmodule Outcry.Matchmaker do
 
   @impl true
   def handle_info(:matchmake, @nostate) do
-    OutcryWeb.MatchmakingPresence.list(channel())
+    Outcry.MatchmakingPresence.list(@channel)
     |> Enum.shuffle()
     |> Enum.chunk_every(@required_users, @required_users, :discard)
     |> Enum.each(&matchmake/1)

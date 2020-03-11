@@ -1,6 +1,5 @@
 defmodule OutcryWeb.OutcryLive do
   use Phoenix.{LiveView, HTML}
-  alias OutcryWeb.MatchmakingPresence
   use OutcryWeb.LiveAuth, otp_app: :outcry
 
   @impl true
@@ -15,20 +14,18 @@ defmodule OutcryWeb.OutcryLive do
      temporary_assigns: [trade_message: nil]}
   end
 
-  defp join_matchmaking(socket) do
-    channel = Outcry.Matchmaker.channel()
-    {:ok, _} = MatchmakingPresence.track(self(), channel, socket.assigns.user_id, %{pid: self()})
-  end
-
-  defp leave_matchmaking(socket) do
-    channel = Outcry.Matchmaker.channel()
-    :ok = MatchmakingPresence.untrack(self(), channel, socket.assigns.user_id)
+  @impl true
+  def handle_params(%{}, _params, socket) do
+    {:ok, _} = Outcry.Matchmaker.join_matchmaking(self(), socket.assigns.user_id)
+    {:noreply, socket}
   end
 
   @impl true
-  def handle_params(%{}, _params, socket) do
-    join_matchmaking(socket)
-    {:noreply, socket}
+  def handle_info(
+        :kick_out,
+        %{assigns: %{status: :in_queue}} = socket
+      ) do
+    {:noreply, socket |> assign(status: :kicked_out)}
   end
 
   @impl true
@@ -36,7 +33,7 @@ defmodule OutcryWeb.OutcryLive do
         %{event: "game_start", game_pid: game_pid},
         %{assigns: %{status: :in_queue}} = socket
       ) do
-    leave_matchmaking(socket)
+    :ok = Outcry.Matchmaker.leave_matchmaking(self(), socket.assigns.user_id)
     {:noreply, socket |> assign(status: :game_starting, game_pid: game_pid)}
   end
 
@@ -111,7 +108,7 @@ defmodule OutcryWeb.OutcryLive do
 
   @impl true
   def handle_event("requeue", _params, socket) do
-    join_matchmaking(socket)
+    {:ok, _} = Outcry.Matchmaker.join_matchmaking(self(), socket.assigns.user_id)
     {:noreply, socket |> assign(status: :in_queue)}
   end
 
@@ -147,6 +144,13 @@ defmodule OutcryWeb.OutcryLive do
         <div class="tile is-parent">
           <%= Phoenix.View.render(OutcryWeb.GameView, "final_score.html", assigns) %>
         </div>
+      </div>
+      <% :kicked_out -> %>
+      <h1 class="title is-1">Left queue</h1>
+      <div class="content">
+        <p>It looks like you joined the queue again with this account.
+        You have been exited from the queue on this tab.</p>
+        <p><a href="javascript:window.location.reload(true)">Click here to rejoin the queue in this tab.</a></p>
       </div>
     <% end %>
     """
