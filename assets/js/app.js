@@ -54,7 +54,7 @@ Hooks.Points = {
         const previous = this.previousPoints[this.el.id];
         const current = +this.el.innerText;
         this.previousPoints[this.el.id] = current;
-        if (previous === undefined || current == previous) {
+        if (previous === undefined || current === previous) {
             return;
         }
 
@@ -72,7 +72,7 @@ Hooks.Hand = {
         const previous = this.previousHand[this.el.id];
         const current = +this.el.innerText.slice(1, -1);
         this.previousHand[this.el.id] = current;
-        if (previous === undefined || current == previous) {
+        if (previous === undefined || current === previous) {
             return;
         }
 
@@ -196,7 +196,7 @@ const actionMap = {
 
 function isTypingPrice(e) {
     const el = document.activeElement;
-    return el && el.id == "order_price" && e.code.startsWith("Digit");
+    return el && el.id === "order_price" && e.code.startsWith("Digit");
 }
 
 function closeModalIfOpen() {
