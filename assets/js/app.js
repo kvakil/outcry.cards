@@ -114,43 +114,61 @@ liveSocket.connect();
 
 function selectRadio(eid) {
     const element = document.getElementById(eid);
+    if (!element) { return false; }
     element.checked = true;
+    return true;
 }
 
 function selectDropdown(eid, value) {
     const dropdown = document.getElementById(eid);
+    if (!dropdown) { return false; }
     dropdown.value = value;
+    return true;
 }
 
 function addToPrice(digit) {
     const price = document.getElementById("order_price");
+    if (!price) { return false; }
     if (!price.disabled) {
         price.value += digit;
     }
+    return true;
 }
 
 function selectOrderType(eid) {
     const radio = document.getElementById(eid);
-    radio.checked = true;
     const limitOrder = document.getElementById("order_type_limit");
     const price = document.getElementById("order_price");
+    if (!radio || !limitOrder || !price) { return false; }
+    radio.checked = true;
     price.disabled = !limitOrder.checked;
+    return true;
 }
 
 function backspacePrice() {
     const price = document.getElementById("order_price");
+    if (!price) { return false; }
     price.value = price.value.slice(0, -1);
+    return true;
 }
 
 function submitOrder() {
-    document.getElementById("order_submit").click();
-    if (document.getElementById("order").checkValidity()) {
-        document.getElementById("order_price").value = "";
+    const submit = document.getElementById("order_submit");
+    const order = document.getElementById("order")
+    const price = document.getElementById("order_price");
+    if (!submit || !order || !price) { return false; }
+    submit.click();
+    if (order.checkValidity()) {
+        price.value = "";
     }
+    return true;
 }
 
 function requeue() {
-    document.getElementById("requeue").click();
+    const requeue = document.getElementById("requeue");
+    if (!requeue) { return false; }
+    requeue.click();
+    return true;
 }
 
 const actionMap = {
@@ -188,14 +206,20 @@ document.addEventListener("keydown", e => {
     if (isTypingPrice(e)) {
         return false;
     }
+
     const code = e.code;
     const maybeAction = actionMap[code];
+
+    let success;
     if (typeof maybeAction !== "undefined") {
-        e.preventDefault();
-        return maybeAction(e);
+        success = maybeAction(e);
     } else if (code.startsWith("Digit")) {
-        e.preventDefault();
         const whichDigit = code.slice(-1);
-        return addToPrice(whichDigit);
+        success = addToPrice(whichDigit);
     }
+
+    if (success) {
+        e.preventDefault();
+    }
+    return success;
 });
