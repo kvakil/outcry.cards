@@ -4,8 +4,8 @@ defmodule HoundTest do
 
   hound_session()
 
-  test "homepage loads", meta do
-    navigate_to("http://localhost:4000/")
+  test "homepage loads", _meta do
+    navigate_to("http://example.com/")
 
     assert page_title() == "Outcry: open outcry game"
   end

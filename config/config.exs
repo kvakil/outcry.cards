@@ -39,5 +39,3 @@ config :outcry, :pow,
   mailer_backend: OutcryWeb.PowMailer,
   web_mailer_module: OutcryWeb,
   cache_store_backend: Pow.Store.Backend.EtsCache
-
-config :hound, genserver_timeout: :infinity
