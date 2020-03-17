@@ -27,6 +27,14 @@ const Hooks = {};
 Hooks.Order = {
     mounted() {
         animateOnce(this.el, "animated");
+        this.el.addEventListener("click", _e => {
+            const direction = this.el.dataset.side;
+            const oppositeDirection = direction === "buy" ? "sell" : "buy";
+            selectRadio("order_direction_" + oppositeDirection);
+            selectOrderType("order_type_market");
+            selectDropdown("order_suit", this.el.dataset.suit);
+            submitOrder();
+        });
     }
 };
 

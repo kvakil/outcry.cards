@@ -20,6 +20,10 @@
     animation-duration: 0.4s;
 }
 
+.order-book-order {
+    cursor: pointer;
+}
+
 .player {
     height: 44px;
     font-family: monospace;

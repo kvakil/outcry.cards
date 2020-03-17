@@ -14,7 +14,8 @@
         <%= for {player, price} <- order_book[side] do %>
           <% nice_id = @players[player].nice_id %>
           <% e_id = Enum.join(["order-book-order", nice_id, suit, side, price], "-") %>
-          <span class="order-book-order" id="<%= e_id %>" phx-hook="Order">
+          <span class="order-book-order" id="<%= e_id %>" phx-hook="Order"
+                data-suit="<%= suit %>" data-side="<%= side %>" role="button">
           <%= price %><sup><%= nice_id %></sup>
           </span>
         <% end %>
