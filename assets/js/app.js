@@ -47,14 +47,14 @@ Hooks.History = {
 
 Hooks.Points = {
     mounted() {
-        this.previousPoints = {};
+        this.previousPoints = this.el.dataset.points;
     },
 
     updated() {
-        const previous = this.previousPoints[this.el.id];
-        const current = +this.el.innerText;
-        this.previousPoints[this.el.id] = current;
-        if (previous === undefined || current === previous) {
+        const previous = this.previousPoints;
+        const current = +this.el.dataset.points;
+        this.previousPoints = current;
+        if (current === previous) {
             return;
         }
 
@@ -65,20 +65,26 @@ Hooks.Points = {
 
 Hooks.Hand = {
     mounted() {
-        this.previousHand = {};
+        this.previousHand = this.el.dataset.hand;
     },
 
     updated() {
-        const previous = this.previousHand[this.el.id];
-        const current = +this.el.innerText.slice(1, -1);
-        this.previousHand[this.el.id] = current;
-        if (previous === undefined || current === previous) {
+        const previous = this.previousHand;
+        const current = +this.el.dataset.hand;
+        this.previousHand = current;
+        if (current === previous) {
             return;
         }
 
         const animationClass = ((previous > current) ? "sell" : "buy") + "-animated";
         animateOnce(this.el, animationClass);
-    },
+    }
+};
+
+Hooks.OrderTypeRadio = {
+    mounted() {
+        this.el.addEventListener("click", function() { selectOrderType(this.id); });
+    }
 };
 
 function getUnixTime() {

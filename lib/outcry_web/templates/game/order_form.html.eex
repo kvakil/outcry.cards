@@ -42,15 +42,15 @@
     <div class="field-body is-narrow">
       <div class="field">
         <label class="radio">
-          <%= radio_button f, :type, :limit, [checked: ""] %>
+          <%= radio_button f, :type, :limit, [checked: "", phx_hook: "OrderTypeRadio"] %>
           Limit (<kbd>z</kbd>)
         </label>
         <label class="radio">
-          <%= radio_button f, :type, :market %>
+          <%= radio_button f, :type, :market, [phx_hook: "OrderTypeRadio"] %>
           Market (<kbd>x</kbd>)
         </label>
         <label class="radio">
-          <%= radio_button f, :type, :cancel %>
+          <%= radio_button f, :type, :cancel, [phx_hook: "OrderTypeRadio"] %>
           Cancel (<kbd>c</kbd>)
         </label>
       </div>

@@ -24,7 +24,7 @@
           <%= suit %>
           <abbr id="hand_<%= suit %>" class="hand"
                 title="You have <%= hand[suit] %> cards of suit <%= suit %>."
-                phx-hook="Hand">
+                phx-hook="Hand" data-hand="<%= hand[suit] %>">
           (<%= hand[suit] %>)</abbr></td>
         <% end %>
       </td>

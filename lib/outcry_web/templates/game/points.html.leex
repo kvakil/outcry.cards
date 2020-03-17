@@ -12,7 +12,7 @@
         <abbr title="You are player <%= player.nice_id %>.">(*)</abbr>
       <% end %>
       </td>
-      <td id="points-<%= player.nice_id %>" phx-hook="Points" class="points"><%= player.wealth %></td>
+      <td id="points-<%= player.nice_id %>" phx-hook="Points" data-points="<%= player.wealth %>" class="points"><%= player.wealth %></td>
     </tr>
     <% end %>
 </table>
