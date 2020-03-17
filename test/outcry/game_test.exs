@@ -233,7 +233,7 @@ defmodule Outcry.GameTest do
 
     assert_player_state(player_h, %{hand: %{j: 0}})
     # next order denied
-    assert :ok = Player.place_order(player_h, game, sell_order)
+    assert {:error, _} = Player.place_order(player_h, game, sell_order)
     # next order does not hit denied order above
     assert :ok = Player.place_order(player_j, game, %{sell_order | direction: :buy})
     assert_player_state(player_h, %{hand: %{j: 0}, wealth: 0})
@@ -338,7 +338,7 @@ defmodule Outcry.GameTest do
             %Cancel{suit: suit, direction: direction}
         end
 
-      assert :ok = Player.place_order(player, game, order)
+      Player.place_order(player, game, order)
     end)
 
     send(game, :end_game)
