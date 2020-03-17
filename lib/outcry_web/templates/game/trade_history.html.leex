@@ -3,10 +3,21 @@
   <div id="trade_history" phx-update="append">
   <%= if @trade_message do %>
     <% %{trade_id: trade_id, trade: {parties, cross}, order: %{suit: suit}} = @trade_message %>
-    <% buyer_nice = @players[parties.buy].nice_id %>
-    <% seller_nice = @players[parties.sell].nice_id %>
+    <% buyer = parties.buy %>
+    <% seller = parties.sell %>
+    <% buyer_nice = @players[buyer].nice_id %>
+    <% seller_nice = @players[seller].nice_id %>
+    <% buyer_text = "#{buyer_nice}+#{suit}" %>
+    <% seller_text = "#{seller_nice}+#{cross}" %>
     <p id="trade_history_<%= trade_id %>" class="trade-history-item" phx-hook="History">
-    <%= buyer_nice %>+<%= suit %> &amp; <%= seller_nice %>+<%= cross %>
+    <%= case self() do %>
+      <% ^buyer -> %>
+        <u><%= buyer_text %></u> &amp; <%= seller_text %>
+      <% ^seller -> %>
+        <%= buyer_text %> &amp; <u><%= seller_text %></u>
+      <% _ -> %>
+        <%= buyer_text %> &amp; <%= seller_text %>
+    <% end %>
     </p>
   <% end %>
   </div>
