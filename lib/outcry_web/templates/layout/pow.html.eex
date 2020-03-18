@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Outcry: open outcry game</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <link rel="preload" src="<%= Routes.static_path(@conn, "/js/app.js") %>" as="script"></link>
+    <link rel="preload" href="<%= Routes.static_path(@conn, "/js/app.js") %>" as="script"></link>
   </head>
   <body>
     <%= render "navbar.html", assigns %>
