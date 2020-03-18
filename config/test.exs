@@ -21,4 +21,5 @@ Application.put_env(:wallaby, :base_url, "http://localhost:4001/")
 # TODO: this works only on my local machine
 config :wallaby,
   driver: Wallaby.Experimental.Chrome,
-  chromedriver: "/mnt/c/ProgramData/chocolatey/bin/chromedriver.exe"
+  chromedriver: "/mnt/c/ProgramData/chocolatey/bin/chromedriver.exe",
+  screenshot_on_failure: true
