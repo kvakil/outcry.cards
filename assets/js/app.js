@@ -47,7 +47,7 @@ Hooks.History = {
 
 Hooks.Points = {
     mounted() {
-        this.previousPoints = this.el.dataset.points;
+        this.previousPoints = +this.el.dataset.points;
     },
 
     updated() {
@@ -65,7 +65,7 @@ Hooks.Points = {
 
 Hooks.Hand = {
     mounted() {
-        this.previousHand = this.el.dataset.hand;
+        this.previousHand = +this.el.dataset.hand;
     },
 
     updated() {
