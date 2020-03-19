@@ -17,7 +17,7 @@
     animation-name: fade-cyan;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 0.4s;
+    animation-duration: 0.6s;
 }
 
 .order-book-order {
@@ -38,14 +38,14 @@
     animation-name: fade-red;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 0.4s;
+    animation-duration: 0.6s;
 }
 
 .points.sell-animated {
     animation-name: fade-green;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 0.4s;
+    animation-duration: 0.6s;
 }
 
 td.order-book-side {
@@ -82,14 +82,14 @@ td.order-book-side {
     animation-name: fade-green;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 0.4s;
+    animation-duration: 0.6s;
 }
 
 .hand.sell-animated {
     animation-name: fade-red;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 0.4s;
+    animation-duration: 0.6s;
 }
 
 .final-score-header {
