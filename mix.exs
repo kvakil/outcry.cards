@@ -46,7 +46,7 @@ defmodule Outcry.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ex_rated, "~> 1.2"},
       {:pow, "~> 1.0.16"},
-      {:hound, "~> 1.0"}
+      {:wallaby, "~> 0.23.0", [runtime: false, only: :test]}
     ]
   end
 
