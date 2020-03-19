@@ -143,9 +143,8 @@ function selectDropdown(eid, value) {
 function addToPrice(digit) {
     const price = document.getElementById("order_price");
     if (!price) { return false; }
-    if (!price.disabled) {
-        price.value += digit;
-    }
+    selectOrderType("order_type_limit");
+    price.value += digit;
     return true;
 }
 
