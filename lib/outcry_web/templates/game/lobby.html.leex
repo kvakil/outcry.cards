@@ -1,0 +1,21 @@
+<%= f = form_for :room, "#", [phx_submit: :room, id: "room"] %>
+  <%= for {room, num_players_in_room} <- @lobby do %>
+    <em><%= room %></em>: <%= num_players_in_room %><br>
+  <% end %>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= label f, :room_name, "Room Name", [class: "label"] %>
+    </div>
+    <div class="field-body">
+      <%= text_input f, :room_name, [class: "input", required: ""] %>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"></div>
+    <div class="field-body">
+      <div class="control">
+        <%= submit "Create Room", [id: "room_submit", class: "button is-link"] %>
+      </div>
+    </div>
+  </div>
+</form>

@@ -4,10 +4,12 @@ defmodule OutcryWeb.OutcryLive do
 
   @impl true
   def mount(%{}, session, socket) do
-    user_id = case get_user_id(session) do
-      {:ok, user_id} -> "user:#{user_id}"
-      :error -> "anon:#{Ecto.UUID.generate()}"
-    end
+    user_id =
+      case get_user_id(session) do
+        {:ok, user_id} -> "user:#{user_id}"
+        :error -> "anon:#{Ecto.UUID.generate()}"
+      end
+
     {:ok,
      socket
      |> assign(user_id: user_id, status: :in_queue, errors: []),
@@ -15,16 +17,22 @@ defmodule OutcryWeb.OutcryLive do
   end
 
   @impl true
-  def handle_params(%{}, _params, socket) do
-    {:ok, _} = Outcry.Matchmaker.join_matchmaking(self(), socket.assigns.user_id)
-    {:noreply, socket}
+  def handle_params(%{"room" => room}, _uri, socket) do
+    :ok = Outcry.RoomTracker.join_room(%{pid: self(), user_id: socket.assigns.user_id, room: room})
+    {:noreply, socket |> assign(status: :in_room, room: room, players_in_room: [])}
+  end
+
+  @impl true
+  def handle_params(%{}, _uri, socket) do
+    Outcry.RoomTracker.join_lobby(%{pid: self(), user_id: socket.assigns.user_id})
+    {:noreply, socket |> assign(status: :in_lobby, lobby: %{})}
   end
 
   @impl true
   def handle_info(
         :kick_out,
-        %{assigns: %{status: :in_queue}} = socket
-      ) do
+        %{assigns: %{status: status}} = socket
+      ) when status == :in_queue or status == :in_lobby do
     {:noreply, socket |> assign(status: :kicked_out)}
   end
 
@@ -33,7 +41,6 @@ defmodule OutcryWeb.OutcryLive do
         %{event: "game_start", game_pid: game_pid},
         %{assigns: %{status: :in_queue}} = socket
       ) do
-    :ok = Outcry.Matchmaker.leave_matchmaking(self(), socket.assigns.user_id)
     {:noreply, socket |> assign(status: :game_starting, game_pid: game_pid)}
   end
 
@@ -43,6 +50,7 @@ defmodule OutcryWeb.OutcryLive do
     # so we flatten our state a little here.
     # TODO: flatten more?
     order_books = reverse_order_book_buys(state.order_books)
+
     {:noreply,
      socket |> assign(players: state.players, order_books: order_books, status: :game_started)}
   end
@@ -55,6 +63,16 @@ defmodule OutcryWeb.OutcryLive do
   @impl true
   def handle_info(%{event: "game_over", score_info: score_info}, socket) do
     {:noreply, socket |> assign(status: :game_over, score_info: score_info)}
+  end
+
+  @impl true
+  def handle_info(%{event: "lobby_update", room: room, num_players_in_room: num_players_in_room}, socket) do
+    {:noreply, socket |> update(:lobby, &Map.put(&1, room, num_players_in_room))}
+  end
+
+  @impl true
+  def handle_info(%{event: "room_update", players_in_room: players_in_room}, socket) do
+    {:noreply, socket |> assign(:players_in_room, players_in_room)}
   end
 
   defp reverse_order_book_buys(order_books) do
@@ -94,6 +112,12 @@ defmodule OutcryWeb.OutcryLive do
   end
 
   @impl true
+  def handle_event("room", %{"room" => %{"room_name" => room_name}}, socket) do
+    :ok = Outcry.RoomTracker.create_room(%{room: room_name, pid: self(), user_id: socket.assigns.user_id})
+    {:noreply, socket |> assign(status: :in_room, room: room_name, players_in_room: [])}
+  end
+
+  @impl true
   def handle_event("order", %{"order" => order}, socket) do
     with {:ok, _} <- rate_limit(socket),
          {:ok, order_type} <- get_order_type(order),
@@ -108,7 +132,6 @@ defmodule OutcryWeb.OutcryLive do
 
   @impl true
   def handle_event("requeue", _params, socket) do
-    {:ok, _} = Outcry.Matchmaker.join_matchmaking(self(), socket.assigns.user_id)
     {:noreply, socket |> assign(status: :in_queue)}
   end
 
@@ -121,7 +144,10 @@ defmodule OutcryWeb.OutcryLive do
   def render(assigns) do
     ~L"""
     <%= case @status do %>
-      <% :in_queue -> %> <h1 class="title is-1">Looking for game...</h1>
+      <% :in_lobby -> %>
+      <%= Phoenix.View.render(OutcryWeb.GameView, "lobby.html", assigns) %>
+      <% :in_room -> %>
+      <%= Phoenix.View.render(OutcryWeb.GameView, "room.html", assigns) %>
       <% :game_started -> %>
       <%= Phoenix.View.render(OutcryWeb.GameView, "error.html", assigns) %>
       <div class="tile is-ancestor">
