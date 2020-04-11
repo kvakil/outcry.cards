@@ -10,8 +10,8 @@ defmodule Outcry.Application do
     children = [
       Outcry.Repo,
       OutcryWeb.Endpoint,
-      Outcry.MatchmakingPresence,
-      Outcry.Matchmaker,
+      Outcry.RoomPresence,
+      Outcry.RoomTracker,
       Outcry.GameSupervisor,
       Outcry.Rater
     ]

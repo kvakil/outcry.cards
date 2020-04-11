@@ -329,6 +329,8 @@ defmodule Outcry.Game do
     score_info = end_game(state)
 
     with {:ok, pid_to_player_id} <- Map.fetch(state, :pid_to_player_id),
+         {:ok, room} <- Map.fetch(state, :room),
+         :ok <- Outcry.RoomTracker.game_done(%{room: room}),
          :ok <-
            Outcry.Rater.rate_game(%{score_info: score_info, pid_to_player_id: pid_to_player_id}) do
     end
