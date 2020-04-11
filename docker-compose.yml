@@ -1,0 +1,36 @@
+version: '3.5'
+
+services:
+  phoenix:
+    build:
+      context: .
+      dockerfile: docker/outcry/Dockerfile
+    environment:
+      DATABASE_URL: ecto://postgres:postgres@db/outcry
+    ports:
+      - "127.0.0.1:4000:4000"
+    secrets:
+      - SECRET_KEY_BASE
+    depends_on:
+      - db
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: outcry
+      PGDATA: /var/lib/postgresql/data/pgdata
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 15s
+      retries: 5
+volumes:
+  pgdata:
+
+secrets:
+  SECRET_KEY_BASE:
+    file: ../secrets/SECRET_KEY_BASE
