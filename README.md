@@ -4,6 +4,7 @@ To start your Phoenix server:
 
   * Install Elixir (v1.10+) using [these instructions](https://elixir-lang.org/install.html). 
   * Install dependencies with `mix deps.get`
+  * Install `postgresql`, create a database `outcry_dev` and a user `postgres` and password `postgres`.
   * Create and migrate your database with `mix ecto.setup`
   * Install Node.js dependencies with `cd assets && npm install`
   * Start Phoenix endpoint with `mix phx.server`
