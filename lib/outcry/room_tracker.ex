@@ -1,4 +1,9 @@
-defmodule Outcry.Matchmaker do
+defmodule Outcry.RoomPresence do
+  use Phoenix.Presence, otp_app: :outcry,
+                        pubsub_server: Outcry.PubSub
+end
+
+defmodule Outcry.RoomTracker do
   use GenServer
 
   @nostate []
