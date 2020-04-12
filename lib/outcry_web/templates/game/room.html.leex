@@ -1,2 +1,2 @@
-<%=inspect(@room) %>
-<%=inspect(Enum.map(@players_in_room, &inspect/1)) %>
+<%=inspect(@room.name) %>
+<%=inspect(Enum.map(@room.players, &inspect/1)) %>

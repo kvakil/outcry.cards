@@ -12,8 +12,6 @@ window.addEventListener("beforeunload", e => {
 
 import {Socket} from "phoenix";
 
-let socket = new Socket("/socket", {});
-
 import LiveSocket from "phoenix_live_view";
 
 /* Animates an element once, even if morphdom tries to delete & recreate it. */
@@ -120,6 +118,31 @@ Hooks.Timer = {
         }
     }
 };
+
+Hooks.RoomRadio = {
+    mounted() {
+        this.el.addEventListener("click", () => {
+            Array.from(document.getElementsByClassName("is-selected")).forEach(el => el.classList.remove("is-selected"));
+            this.el.closest("tr").classList.add("is-selected");
+            document.getElementById("join_room_submit").disabled = false;
+        });
+    }
+};
+
+Hooks.CreateRoomModal = {
+    mounted() {
+        const createRoomModal = document.getElementById("create_room_modal");
+        this.el.addEventListener("click", () => {
+            createRoomModal.classList.add("is-active");
+        });
+
+        [...createRoomModal.getElementsByClassName("modal-background"), ...createRoomModal.getElementsByClassName("delete")].forEach(el => {
+            el.addEventListener("click", () => {
+                createRoomModal.classList.remove("is-active");
+            });
+        });
+    }
+}
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 

@@ -10,7 +10,7 @@ defmodule Outcry.RoomTracker do
   @required_users 4
   @lobby "@lobby"
 
-  def start_link(_) do
+  def start_link([]) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
@@ -52,13 +52,19 @@ defmodule Outcry.RoomTracker do
     GenServer.call(__MODULE__, {:leave_lobby, info})
   end
 
+  defp can_start_room(users_in_room) do
+    case map_size(users_in_room) do
+      @required_users -> :ok
+      _ -> {:error, "Not enough users in room."}
+    end
+  end
+
   @impl true
   def handle_call({:create_room, %{room: room, pid: _pid, user_id: _user_id} = info}, from, state) do
     case Map.get(state, room) do
       nil ->
-        new_state = state |> Map.put(room, %{room_state: :not_started, num_players: 0})
         :ok = OutcryWeb.Endpoint.subscribe(topic_of_room(room))
-        handle_call({:join_room, info}, from, new_state)
+        {:reply, :ok, state |> Map.put(room, %{room_state: :not_started, num_players: 0})}
 
       %{room_state: :started} ->
         {:reply, {:error, "Room already exists."}, state}
@@ -72,7 +78,7 @@ defmodule Outcry.RoomTracker do
   def handle_call({:join_room, %{room: room, pid: pid, user_id: user_id}}, _from, state) do
     case Map.get(state, room) do
       nil ->
-        {:reply, {:error, "Room does not exist."}, state |> IO.inspect}
+        {:reply, {:error, "Room does not exist."}, state}
 
       %{room_state: :started} ->
         {:reply, {:error, "Room has already started."}, state}
@@ -111,29 +117,24 @@ defmodule Outcry.RoomTracker do
 
   @impl true
   def handle_call({:leave_room, %{room: room, pid: pid, user_id: user_id}}, _from, state) do
-    Outcry.RoomPresence.untrack(pid, topic_of_room(room), user_id)
-    {:reply, :ok, state}
+    {:reply, Outcry.RoomPresence.untrack(pid, topic_of_room(room), user_id), state}
   end
 
   @impl true
   def handle_call({:start_room, %{room: room, pid: _pid, user_id: _user_id}}, _from, state) do
-    topic = room |> topic_of_room() 
-    users_in_room = Outcry.RoomPresence.list(topic)
-    :ok = OutcryWeb.Endpoint.subscribe(topic)
-    if map_size(users_in_room) < @required_users do
-      {:reply, {:error, "Not enough users in room."}, state}
-    else
-      @required_users = map_size(users_in_room)
-
-      pid_to_player_id =
-        Map.new(users_in_room, fn {player_id, %{metas: [%{pid: pid}]}} ->
-          {pid, player_id}
-        end)
-
-      {:ok, _} =
-        Outcry.GameSupervisor.start_child(%{pid_to_player_id: pid_to_player_id, room: room})
-
+    with topic <- room |> topic_of_room(),
+         :ok <- OutcryWeb.Endpoint.subscribe(topic),
+         users_in_room <- Outcry.RoomPresence.list(topic),
+         :ok <- can_start_room(users_in_room),
+         pid_to_player_id <-
+           Map.new(users_in_room, fn {player_id, %{metas: [%{pid: pid}]}} ->
+             {pid, player_id}
+           end),
+         {:ok, _pid} <-
+           Outcry.GameSupervisor.start_child(%{pid_to_player_id: pid_to_player_id, room: room}) do
       {:reply, :ok, state |> update_in([room, :room_state], fn :not_started -> :started end)}
+    else
+      {:error, _} = e -> {:reply, e, state}
     end
   end
 
@@ -144,48 +145,58 @@ defmodule Outcry.RoomTracker do
 
   @impl true
   def handle_call({:join_lobby, %{pid: pid, user_id: user_id}}, _from, state) do
-    Outcry.RoomPresence.track(pid, @lobby, user_id, %{pid: pid})
-    {:reply, :ok, state}
+    with {:ok, _} <- Outcry.RoomPresence.track(pid, @lobby, user_id, %{pid: pid}) do
+      active_rooms = state |> Map.keys()
+
+      lobby =
+        active_rooms
+        |> Map.new(&{&1, &1 |> topic_of_room() |> Outcry.RoomPresence.list() |> map_size()})
+
+      {:reply, {:ok, lobby}, state}
+    else
+      {:error, _} = e -> {:reply, e, state}
+    end
   end
 
   @impl true
   def handle_call({:leave_lobby, %{pid: pid, user_id: user_id}}, _from, state) do
-    Outcry.RoomPresence.untrack(pid, @lobby, user_id)
-    {:reply, :ok, state}
+    {:reply, Outcry.RoomPresence.untrack(pid, @lobby, user_id), state}
   end
 
   @impl true
   def handle_info(
         %{
           event: "presence_diff",
-          payload: %{joins: joins, leaves: leaves},
           topic: "room:" <> room
         },
         state
       ) do
-    new_state =
-      state
-      |> update_in([room, :num_players], fn num_players_in_room ->
-        new_players_in_room = num_players_in_room + map_size(joins) - map_size(leaves)
+    players_in_room =
+      room
+      |> topic_of_room()
+      |> Outcry.RoomPresence.list()
 
-        Outcry.RoomPresence.list(@lobby)
-        |> Enum.each(fn {_, %{metas: [%{pid: pid}]}} ->
-          send(pid, %{event: "lobby_update", room: room, num_players_in_room: num_players_in_room})
-        end)
+    num_players_in_room = map_size(players_in_room)
 
-        players_in_room =
-          room
-          |> topic_of_room()
-          |> Outcry.RoomPresence.list()
-          |> Enum.map(fn {_, %{metas: [%{pid: pid}]}} -> pid end)
-        
-        players_in_room |> Enum.each(fn player_pid ->
-          send(player_pid, %{event: "room_update", players_in_room: players_in_room})
-        end)
+    Outcry.RoomPresence.list(@lobby)
+    |> Enum.each(fn {_, %{metas: [%{pid: pid}]}} ->
+      send(pid, %{event: "lobby_update", room: room, num_players_in_room: num_players_in_room})
+    end)
 
-        new_players_in_room
-      end)
+    pids = players_in_room |> Enum.map(fn {_, %{metas: [%{pid: pid}]}} -> pid end)
 
-    {:noreply, new_state}
+    pids
+    |> Enum.each(fn player_pid ->
+      send(player_pid, %{event: "room_update", players_in_room: pids})
+    end)
+
+    {:noreply,
+     case num_players_in_room do
+       0 ->
+         state |> Map.delete(room)
+
+       _ ->
+         state
+     end}
   end
 end

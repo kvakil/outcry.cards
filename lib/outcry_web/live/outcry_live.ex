@@ -1,31 +1,70 @@
 defmodule OutcryWeb.OutcryLive do
-  use Phoenix.{LiveView, HTML}
+  use Phoenix.LiveView, layout: {OutcryWeb.LayoutView, "game.html"}
+  use Phoenix.HTML
   use OutcryWeb.LiveAuth, otp_app: :outcry
 
   @impl true
   def mount(%{}, session, socket) do
     user_id =
-      case get_user_id(session) do
-        {:ok, user_id} -> "user:#{user_id}"
-        :error -> "anon:#{Ecto.UUID.generate()}"
+      if connected?(socket) do
+        case get_user_id(session) do
+          {:ok, user_id} -> "user:#{user_id}"
+          :error -> "anon:#{Ecto.UUID.generate()}"
+        end
+      else
+        nil
       end
 
     {:ok,
      socket
-     |> assign(user_id: user_id, status: :in_queue, errors: []),
+     |> assign(user_id: user_id)
+     |> assign_new(:errors, fn -> [] end)
+     |> assign_new(:status, fn -> nil end),
      temporary_assigns: [trade_message: nil]}
   end
 
+  defp redirect_to_lobby(socket) do
+    socket |> push_patch(to: "/play", replace: true)
+  end
+
+  defp redirect_to_room(socket, room) do
+    room_query = URI.encode_query(%{room: room})
+    socket |> push_patch(to: "/play?#{room_query}", replace: true)
+  end
+
+  defp join_lobby(socket) do
+    case Outcry.RoomTracker.join_lobby(%{pid: self(), user_id: socket.assigns.user_id}) do
+      {:ok, lobby} ->
+        socket |> assign(status: :in_lobby, lobby: lobby, errors: [])
+      {:error, error} ->
+        socket |> assign(errors: [error])
+    end
+  end
+
   @impl true
-  def handle_params(%{"room" => room}, _uri, socket) do
-    :ok = Outcry.RoomTracker.join_room(%{pid: self(), user_id: socket.assigns.user_id, room: room})
-    {:noreply, socket |> assign(status: :in_room, room: room, players_in_room: [])}
+  def handle_params(%{"room" => room_name}, _uri, socket) do
+    if connected?(socket) do
+      case Outcry.RoomTracker.join_room(%{pid: self(), user_id: socket.assigns.user_id, room: room_name}) do
+        :ok ->
+          {:noreply, socket |> assign(status: :in_room, room: %{name: room_name, players: []}, errors: [])}
+        {:error, error} ->
+          {:noreply, socket |> assign(errors: [error]) |> redirect_to_lobby()}
+      end
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
   def handle_params(%{}, _uri, socket) do
-    Outcry.RoomTracker.join_lobby(%{pid: self(), user_id: socket.assigns.user_id})
-    {:noreply, socket |> assign(status: :in_lobby, lobby: %{})}
+    if connected?(socket) do
+      case socket.assigns.status do
+        :in_lobby -> {:noreply, socket}
+        _ -> {:noreply, join_lobby(socket)}
+      end
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
@@ -71,8 +110,8 @@ defmodule OutcryWeb.OutcryLive do
   end
 
   @impl true
-  def handle_info(%{event: "room_update", players_in_room: players_in_room}, socket) do
-    {:noreply, socket |> assign(:players_in_room, players_in_room)}
+  def handle_info(%{event: "room_update", players_in_room: players}, socket) do
+    {:noreply, socket |> update(:room, &Map.put(&1, :players, players))}
   end
 
   defp reverse_order_book_buys(order_books) do
@@ -112,9 +151,18 @@ defmodule OutcryWeb.OutcryLive do
   end
 
   @impl true
-  def handle_event("room", %{"room" => %{"room_name" => room_name}}, socket) do
-    :ok = Outcry.RoomTracker.create_room(%{room: room_name, pid: self(), user_id: socket.assigns.user_id})
-    {:noreply, socket |> assign(status: :in_room, room: room_name, players_in_room: [])}
+  def handle_event("create_room", %{"create_room" => %{"name" => room_name}}, socket) do
+    case Outcry.RoomTracker.create_room(%{pid: self(), user_id: socket.assigns.user_id, room: room_name}) do
+      :ok ->
+        {:noreply, socket |> redirect_to_room(room_name)}
+      {:error, error} ->
+        {:noreply, socket |> assign(errors: [error]) |> redirect_to_lobby()}
+    end
+  end
+
+  @impl true
+  def handle_event("join_room", %{"join_room" => %{"name" => name}}, socket) do
+    {:noreply, socket |> redirect_to_room(name)}
   end
 
   @impl true
@@ -143,13 +191,14 @@ defmodule OutcryWeb.OutcryLive do
   @impl true
   def render(assigns) do
     ~L"""
+    <%= Phoenix.View.render(OutcryWeb.GameView, "error.html", assigns) %>
     <%= case @status do %>
+      <% nil -> %>
       <% :in_lobby -> %>
       <%= Phoenix.View.render(OutcryWeb.GameView, "lobby.html", assigns) %>
       <% :in_room -> %>
       <%= Phoenix.View.render(OutcryWeb.GameView, "room.html", assigns) %>
       <% :game_started -> %>
-      <%= Phoenix.View.render(OutcryWeb.GameView, "error.html", assigns) %>
       <div class="tile is-ancestor">
         <div class="tile is-parent is-vertical">
           <div class="tile is-parent">
@@ -172,11 +221,11 @@ defmodule OutcryWeb.OutcryLive do
         </div>
       </div>
       <% :kicked_out -> %>
-      <h1 class="title is-1">Left queue</h1>
+      <h1 class="title is-1">Left room</h1>
       <div class="content">
-        <p>It looks like you joined the queue again with this account.
-        You have been exited from the queue on this tab.</p>
-        <p><a href="javascript:window.location.reload(true)">Click here to rejoin the queue in this tab.</a></p>
+        <p>It looks like you joined the room again with this account in a different tab.
+        You have been exited from the room on this tab.</p>
+        <p><a href="javascript:window.location.reload(true)">Click here to rejoin the room in this tab.</a></p>
       </div>
     <% end %>
     """

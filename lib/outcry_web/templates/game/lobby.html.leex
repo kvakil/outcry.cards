@@ -1,21 +1,57 @@
-<%= f = form_for :room, "#", [phx_submit: :room, id: "room"] %>
-  <%= for {room, num_players_in_room} <- @lobby do %>
-    <em><%= room %></em>: <%= num_players_in_room %><br>
-  <% end %>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= label f, :room_name, "Room Name", [class: "label"] %>
-    </div>
-    <div class="field-body">
-      <%= text_input f, :room_name, [class: "input", required: ""] %>
-    </div>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-label is-normal"></div>
-    <div class="field-body">
-      <div class="control">
-        <%= submit "Create Room", [id: "room_submit", class: "button is-link"] %>
+<h1 class="title is-1">Game Lobby</h1>
+
+<div id="create_room_modal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <article class="message is-info">
+      <div class="message-header">
+        <p>Room Options</p>
+        <button id="create_room_modal_close" class="delete" aria-label="delete"></button>
       </div>
+      <div class="message-body content">
+        <%= f = form_for :create_room, "#", [phx_submit: :create_room, id: "create_room"] %>
+          <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+              <%= text_input f, :name, [class: "input"] %>
+            </dIv>
+          </div>
+          <div class="control">
+            <%= submit "Create Room", [id: "create_room_submit", class: "button"] %>
+          </div>
+        </form>
+      </div>
+    </article>
+  </div>
+</div>
+
+<%= f = form_for :join_room, "#", [phx_submit: :join_room, id: "join_room"] %>
+  <div class="field is-grouped">
+    <div class="control">
+      <%= link "Create Room", [to: "#", class: "button", phx_hook: "CreateRoomModal"] %>
+    </div>
+    <div class="control">
+      <%= submit "Join Room", [id: "join_room_submit", class: "button", disabled: "true"] %>
     </div>
   </div>
+  <table class="table is-hoverable is-fullwidth"> 
+  <thead>
+    <tr>
+      <th>Room</th>
+      <th><abbr title="Number of players (out of 4)">#</abbr></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for {room, num_players_in_room} <- @lobby do %>
+    <tr>
+    <td>
+      <label class="lobby-room radio" role="button">
+        <%= radio_button f, :name, room, [phx_hook: "RoomRadio"] %> <%= room %>
+      </label>
+    </td>
+    <td><%= num_players_in_room %></td>
+    </tr>
+    <% end %>
+  </tbody>
+  </table>
 </form>

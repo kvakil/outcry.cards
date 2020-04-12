@@ -23,7 +23,7 @@ defmodule Outcry.RoomTest do
 
   test "rooms can start games (easy)", %{players: [player0 | other_players] = all_players, random_room: room} do
     assert :ok = RoomTracker.create_room(player0 |> Map.put(:room, room))
-    Enum.each(other_players, fn other_player ->
+    Enum.each(all_players, fn other_player ->
       assert :ok = RoomTracker.join_room(other_player |> Map.put(:room, room))
     end)
     assert :ok = RoomTracker.start_room(player0 |> Map.put(:room, room))
@@ -34,7 +34,7 @@ defmodule Outcry.RoomTest do
 
   test "rooms can start games (hard)", %{players: [player0, player1 | other_players] = all_players, random_room: room} do
     assert :ok = RoomTracker.create_room(player0 |> Map.put(:room, room))
-    Enum.each([player1 | other_players], fn other_player ->
+    Enum.each(all_players, fn other_player ->
       assert :ok = RoomTracker.join_room(other_player |> Map.put(:room, room))
     end)
     assert :ok = RoomTracker.leave_room(player0 |> Map.put(:room, room))

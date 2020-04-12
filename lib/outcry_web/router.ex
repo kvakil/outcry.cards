@@ -7,8 +7,7 @@ defmodule OutcryWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_flash
-    plug Phoenix.LiveView.Flash
+    plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -20,10 +19,6 @@ defmodule OutcryWeb.Router do
 
   pipeline :pow_layout do
     plug :put_layout, {OutcryWeb.LayoutView, :pow}
-  end
-
-  pipeline :game_layout do
-    plug :put_layout, {OutcryWeb.LayoutView, :game}
   end
 
   scope "/" do
@@ -40,7 +35,7 @@ defmodule OutcryWeb.Router do
   end
 
   scope "/", OutcryWeb do
-    pipe_through [:browser, :game_layout]
+    pipe_through :browser
 
     live "/play", OutcryLive
   end

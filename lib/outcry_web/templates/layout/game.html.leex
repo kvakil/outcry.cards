@@ -5,15 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Outcry: open outcry game</title>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(OutcryWeb.Endpoint, "/css/app.css") %>"/>
     <%= csrf_meta_tag() %>
   </head>
   <body>
     <section class="section">
       <main role="main" class="container">
-        <%= render @view_module, @view_template, assigns %>
+        <p><%= live_flash(@flash, :notice) %></p>
+        <p><%= live_flash(@flash, :error) %></p>
+        <%= @inner_content %>
       </main>
     </section>
-    <script src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script src="<%= Routes.static_path(OutcryWeb.Endpoint, "/js/app.js") %>"></script>
   </body>
 </html>
